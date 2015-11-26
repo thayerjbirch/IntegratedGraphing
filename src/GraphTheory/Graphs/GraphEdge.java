@@ -12,12 +12,14 @@ import javafx.scene.shape.Line;
  *
  * @author Thayer
  */
-public class GraphEdge implements GraphObject{
+public class GraphEdge implements GraphObject,Translatable{
     public GraphLine line;
     protected GraphNode startNode;
     protected GraphNode endNode;
+    private Graph parent;
     
     public GraphEdge(Graph p, GraphNode start, GraphNode end, Color color){
+        parent = p;
         if(p==null||start==null||end==null||color==null)
             throw new IllegalArgumentException("Passed a null value to GraphEdge constructor.");
         startNode = start;
@@ -39,5 +41,10 @@ public class GraphEdge implements GraphObject{
             line.setEndX(v.getX());
             line.setEndY(v.getY());
         }
+    }
+
+    @Override
+    public void translate(double x, double y) {
+        parent.translate(x, y);
     }
 }

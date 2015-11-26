@@ -11,10 +11,12 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -37,6 +39,7 @@ public class IntegratedGraphing extends Application {
         primaryStage.setTitle("Drawing Operations Test");
         Group root = new Group();
         Canvas canvas = new Canvas(800, 600);
+        root.getChildren().add(canvas);
         //GraphicsContext gc = canvas.getGraphicsContext2D();
         //drawShapes(gc);
         
@@ -50,12 +53,11 @@ public class IntegratedGraphing extends Application {
         circle1.relocate(canvas.getWidth()/2 - circle1.getRadius(),canvas.getHeight()/2 - circle1.getRadius());
         root.getChildren().addAll(circle1,line);*/
         
-        Graph myGraph = Graph.buildKGraph(canvas.getWidth() / 2, canvas.getHeight() / 2, 3);
+        Graph myGraph = Graph.buildKGraph(canvas.getWidth() / 2, canvas.getHeight() / 2, 8);
         myGraph.reorderNodes(100);
         MouseGestures.addGestures(myGraph);
         root.getChildren().add(myGraph.graphContents);
         
-        root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
@@ -81,6 +83,5 @@ public class IntegratedGraphing extends Application {
                          new double[]{210, 210, 240, 240}, 4);
         gc.strokePolyline(new double[]{110, 140, 110, 140},
                           new double[]{210, 210, 240, 240}, 4);
-        
     }
 }

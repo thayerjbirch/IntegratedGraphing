@@ -9,7 +9,7 @@ package GraphTheory.Mouse;
  * @author Thayer
  */
 public final class Utility {
-    public static Tool currentTool = Tool.POINTER; //move this later    
+    public static final Tool currentTool = Tool.POINTER; //move this later    
     
     public enum Tool {
         POINTER

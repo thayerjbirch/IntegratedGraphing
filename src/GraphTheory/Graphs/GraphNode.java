@@ -14,9 +14,10 @@ import javafx.scene.shape.Circle;
  *
  * @author Thayer
  */
-public class GraphNode implements GraphObject{
+public class GraphNode implements GraphObject,Translatable{
     private int degree;
-    public GraphCircle circle;    
+    public GraphCircle circle;
+    private Graph parent;
     private ArrayList<GraphNode> adjacentTo = new ArrayList();
     private ArrayList<GraphEdge> edges = new ArrayList();
 
@@ -72,6 +73,7 @@ public class GraphNode implements GraphObject{
     
     public GraphNode(Graph g, double x, double y, Color color){
         degree = 0;
+        parent = g;
         circle = new GraphCircle(g.nodeSize,this);
         circle.setCenterX(x);
         circle.setCenterY(y);
@@ -81,5 +83,13 @@ public class GraphNode implements GraphObject{
     
     public GraphNode(Graph g, double x, double y){
         this(g,x,y,Color.BLACK);
+    }
+
+    @Override
+    public void translate(double x, double y) {
+        circle.translate(x, y);
+        for(GraphEdge e : edges)
+            e.nodeMoved(this);
+        parent.recenterCircle();
     }
 }

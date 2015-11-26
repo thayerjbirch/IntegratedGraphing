@@ -12,7 +12,8 @@ import javafx.scene.shape.Line;
  *
  * @author Thayer
  */
-public interface GraphObject {    
+public interface GraphObject {
+    
     public class GraphCircle extends Circle{
         GraphObject represents;
         
@@ -23,6 +24,11 @@ public interface GraphObject {
         
         public GraphObject getRepresents(){
             return represents;
+        }
+        
+        public void translate(double x, double y){
+            super.setCenterX(getCenterX() + x);
+            super.setCenterY(getCenterY() + y);
         }
     }
     public class GraphLine extends Line{

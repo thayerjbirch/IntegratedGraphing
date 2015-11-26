@@ -5,6 +5,7 @@
  */
 package GraphTheory.Graphs;
 
+import GraphTheory.Mouse.MouseGestures;
 import java.util.ArrayList;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
@@ -20,12 +21,12 @@ public class Graph implements GraphObject,Translatable{
     /**
      * The default brush size for nodes and edges that are elements of this graph.
      */
-    protected int strokeSize = 2;
+    protected int strokeSize = 4;
 
     /**
      * The default size of each node that is an element of this graph.
      */
-    protected int nodeSize = 15;
+    protected int nodeSize = 8;
 
     /**
      * The sum of all degrees of nodes in the graph.
@@ -42,7 +43,7 @@ public class Graph implements GraphObject,Translatable{
      */
     protected double centerY;
     protected double defaultRadius = 100;
-    public Circle circle;
+    public GraphCircle circle;
     public Pane graphContents = new Pane();
     private ArrayList<GraphNode> nodeSet = new ArrayList();
     private ArrayList<GraphEdge> edgeSet = new ArrayList();
@@ -80,10 +81,11 @@ public class Graph implements GraphObject,Translatable{
     public Graph(double x, double y){
         centerX = x;
         centerY = y;
-        circle = new Circle(nodeSize);
+        circle = new GraphCircle(nodeSize,this);
         circle.setStroke(Color.GRAY);
         circle.setFill(Color.GRAY);
-        circle.relocate(x - (nodeSize/2), y - (nodeSize/2));
+        circle.setCenterX(x);
+        circle.setCenterY(y);
         graphContents.getChildren().add(circle);
     }
     
@@ -118,6 +120,9 @@ public class Graph implements GraphObject,Translatable{
                 g.addEdge(vertices.get(i), vertices.get(j));
             }
         }
+        for(GraphNode v : vertices){
+            v.circle.toFront();
+        }
         return g;
     }
     
@@ -128,6 +133,7 @@ public class Graph implements GraphObject,Translatable{
      */
     public void addNode(double x, double y){
         GraphNode tempNode = new GraphNode(this,x,y);
+        MouseGestures.addGestures(tempNode);
         nodeSet.add(tempNode);
         graphContents.getChildren().add(tempNode.circle);
     }
@@ -155,6 +161,7 @@ public class Graph implements GraphObject,Translatable{
         edgeSet.add(tempEdge);
         start.addEdge(tempEdge);
         end.addEdge(tempEdge);
+        MouseGestures.addGestures(tempEdge);
         graphContents.getChildren().add(tempEdge.line);
     }
     
@@ -199,9 +206,24 @@ public class Graph implements GraphObject,Translatable{
     protected Point2D findPoint2D(double rad){
         return new Point2D(centerX + (Math.cos(rad) * defaultRadius),centerY + (Math.sin(rad) * defaultRadius));
     }
+    
+    //Sets the center handle to the average coordinates among all vertices
+    public void recenterCircle(){
+        double newSumX = 0, newSumY = 0;
+        int divisor = nodeSet.size();
+        for(GraphNode v : nodeSet){
+            newSumX += v.getX();
+            newSumY += v.getY();
+        }
+        circle.setCenterX(newSumX / divisor);
+        circle.setCenterY(newSumY / divisor);
+    }
 
     @Override
     public void translate(double x, double y) {
-        System.out.println("hi");
+        circle.translate(x,y);
+        for(GraphNode v : nodeSet){
+            v.translate(x,y);
+        }
     }
 }
