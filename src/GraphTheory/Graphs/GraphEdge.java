@@ -17,6 +17,7 @@ public class GraphEdge implements GraphObject,Translatable{
     protected GraphNode startNode;
     protected GraphNode endNode;
     private Graph parent;
+    protected boolean active = false;
     
     public GraphEdge(Graph p, GraphNode start, GraphNode end, Color color){
         parent = p;
@@ -27,10 +28,26 @@ public class GraphEdge implements GraphObject,Translatable{
         line = new GraphLine(start.getX(),start.getY(),end.getX(),end.getY(),this);
         line.setStrokeWidth(p.strokeSize);
         line.setStroke(color);
+        
     }
     
     public GraphEdge(Graph p, GraphNode start, GraphNode end){
         this(p,start,end,Color.BLACK);
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof GraphEdge))
+            return false;
+        GraphEdge e = (GraphEdge) o;
+        if(e.startNode == this.startNode){
+            if(e.endNode == this.endNode)
+                return true;
+        } else if(e.startNode == this.endNode){
+            if(e.endNode == this.startNode)
+                return true;
+        }
+        return false;
     }
     
     public void nodeMoved(GraphNode v){

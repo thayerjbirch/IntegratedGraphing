@@ -47,6 +47,7 @@ public class Graph implements GraphObject,Translatable{
     public Pane graphContents = new Pane();
     private ArrayList<GraphNode> nodeSet = new ArrayList();
     private ArrayList<GraphEdge> edgeSet = new ArrayList();
+    private ArrayList<GraphEdge> edges   = new ArrayList();
     //private ArrayList<Graph> subgraphs = new ArrayList();
 
     public ArrayList<GraphNode> getNodeSet() {
@@ -56,7 +57,10 @@ public class Graph implements GraphObject,Translatable{
     public ArrayList<GraphEdge> getEdgeSet() {
         return edgeSet;
     }
-
+    
+    public ArrayList<GraphEdge> getEdges() {
+        return edges;
+    }
     public double getDefaultRadius() {
         return defaultRadius;
     }
@@ -81,7 +85,7 @@ public class Graph implements GraphObject,Translatable{
     public Graph(double x, double y){
         centerX = x;
         centerY = y;
-        circle = new GraphCircle(nodeSize,this);
+        circle = new GraphCircle(nodeSize/2,this);
         circle.setStroke(Color.GRAY);
         circle.setFill(Color.GRAY);
         circle.setCenterX(x);
@@ -114,13 +118,10 @@ public class Graph implements GraphObject,Translatable{
      */
     public static Graph buildKGraph(double x, double y, int order){
         Graph g = new Graph(x,y,order);
-        ArrayList<GraphNode> vertices = g.getNodeSet();
-        for(int i = 0; i < order; i++){
-            for(int j = (i+1); j < order; j++){
-                g.addEdge(vertices.get(i), vertices.get(j));
-            }
+        for(GraphEdge e : g.getEdges()){
+            g.drawEdge(e);
         }
-        for(GraphNode v : vertices){
+        for(GraphNode v : g.getNodeSet()){
             v.circle.toFront();
         }
         return g;
@@ -134,6 +135,8 @@ public class Graph implements GraphObject,Translatable{
     public void addNode(double x, double y){
         GraphNode tempNode = new GraphNode(this,x,y);
         MouseGestures.addGestures(tempNode);
+        for(GraphNode v : nodeSet)
+            addEdge(v, tempNode);
         nodeSet.add(tempNode);
         graphContents.getChildren().add(tempNode.circle);
     }
@@ -158,11 +161,10 @@ public class Graph implements GraphObject,Translatable{
         if(start==end)
             throw new IllegalArgumentException("A vertex cannot be adjacent to itself.");
         GraphEdge tempEdge = new GraphEdge(this, start, end, color);
-        edgeSet.add(tempEdge);
+        edges.add(tempEdge);
         start.addEdge(tempEdge);
         end.addEdge(tempEdge);
         MouseGestures.addGestures(tempEdge);
-        graphContents.getChildren().add(tempEdge.line);
     }
     
     /**
@@ -172,6 +174,18 @@ public class Graph implements GraphObject,Translatable{
      */
     public void addEdge(GraphNode start, GraphNode end){
         addEdge(start,end,Color.BLACK);
+    }
+    
+    public void drawEdge(GraphEdge e){
+        e.active = true;
+        edgeSet.add(e);
+        graphContents.getChildren().add(e.line);
+    }
+    
+    public void removeEdge(GraphEdge e){
+        e.active = false;
+        edgeSet.remove(e);
+        this.graphContents.getChildren().remove(e.line);
     }
     
     /**
@@ -205,6 +219,36 @@ public class Graph implements GraphObject,Translatable{
      */
     protected Point2D findPoint2D(double rad){
         return new Point2D(centerX + (Math.cos(rad) * defaultRadius),centerY + (Math.sin(rad) * defaultRadius));
+    }
+    
+    public void compliment(){
+        for(GraphEdge n : edges){
+            GraphEdge temp = findEdge(n);
+            if(temp!=null){
+                this.removeEdge(temp);
+            }
+            else{
+                drawEdge(n);
+            }
+        }
+    }
+    
+   
+    private GraphEdge elementOf(GraphEdge e){
+        for(GraphEdge n : edgeSet){
+            if(n.equals(e))
+                return n;
+        }
+        return null;
+    }
+    
+    public GraphEdge findEdge(GraphNode u, GraphNode v){
+        GraphEdge tempEdge = new GraphEdge(this, u, v);
+        return this.elementOf(tempEdge);
+    }
+    
+    public GraphEdge findEdge(GraphEdge e){
+        return this.elementOf(e);
     }
     
     //Sets the center handle to the average coordinates among all vertices

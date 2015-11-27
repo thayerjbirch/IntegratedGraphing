@@ -1,5 +1,3 @@
-Remove circle from Graph
-
 Create all edges, add boolean on/off?
 
 Move buildKGraph functionality into constructor
