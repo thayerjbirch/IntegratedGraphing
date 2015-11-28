@@ -5,6 +5,7 @@
  */
 package integratedgraphing;
 
+import GraphTheory.IntegratedGraphing;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.AfterClass;
