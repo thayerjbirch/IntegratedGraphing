@@ -16,11 +16,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
@@ -150,5 +153,42 @@ public class IntegratedGraphing extends Application {
         graphsPane.setCollapsible(true);
         graphsPane.setPrefWidth(GuiConstants.SIDEBAR_WIDTH);
         graphsPane.setContent(graphsContentOrganizer);
+        
+        DetailsRow test = new DetailsRow("hi","thayer",null);
+        detailsContent.getChildren().add(test.getRow());
+    }
+    
+    public class DetailsRow{
+        HBox row = new HBox();
+        TextField leftField;
+        TextField rightField;
+        Tooltip tooltip;
+        
+        public DetailsRow(String left, String right, Tooltip tipIn){
+            leftField = new TextField(left);
+            rightField = new TextField(right);
+            leftField.setTooltip(tipIn);
+            rightField.setTooltip(tipIn);
+            leftField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
+            rightField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
+            row.setMaxHeight(GuiConstants.DETAILS_ROW_HEIGHT);
+            row.getChildren().addAll(leftField,rightField);
+        }
+        
+        public HBox getRow(){
+            return row;
+        }
+        
+        public String getRightText(){
+            return rightField.getText();
+        }
+        
+        public String getLeftText(){
+            return leftField.getText();
+        }
+        
+        public void setRightText(String textIn){
+            rightField.setText(textIn);
+        }
     }
 }

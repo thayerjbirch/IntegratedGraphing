@@ -14,7 +14,9 @@ public class GuiConstants {
     
     static final double SCENE_HEIGHT = 600;
     static final double SCENE_WIDTH = 1000;
-    static final double SIDEBAR_WIDTH = 150;
+    static final double SIDEBAR_WIDTH = 180;
+    static final double DETAILS_ROW_HEIGHT = 12;
+    static final double DETAILS_CELL_WIDTH = SIDEBAR_WIDTH / 2 - 10; //the constant is for margins
     static final double RENDERINGS_HEIGHT = SCENE_HEIGHT;
     static final double RENDERINGS_WIDTH  = SCENE_WIDTH - SIDEBAR_WIDTH;
     static final double TOOL_ICON_SIZE = 25;
