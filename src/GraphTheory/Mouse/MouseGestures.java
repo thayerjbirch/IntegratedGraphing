@@ -11,7 +11,7 @@ import GraphTheory.Graphs.GraphNode;
 import GraphTheory.Graphs.GraphObject.GraphCircle;
 import GraphTheory.Graphs.GraphObject.GraphLine;
 import GraphTheory.Graphs.Translatable;
-import static GraphTheory.Mouse.Utility.currentTool;
+import static GraphTheory.Mouse.ToolManager.currentTool;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;

@@ -12,15 +12,15 @@ package GraphTheory;
 public class GuiConstants {
     private GuiConstants(){};
     
-    static final double SCENE_HEIGHT = 600;
-    static final double SCENE_WIDTH = 1000;
-    static final double SIDEBAR_WIDTH = 180;
-    static final double DETAILS_ROW_HEIGHT = 12;
-    static final double DETAILS_CELL_WIDTH = SIDEBAR_WIDTH / 2 - 10; //the constant is for margins
-    static final double RENDERINGS_HEIGHT = SCENE_HEIGHT;
-    static final double RENDERINGS_WIDTH  = SCENE_WIDTH - SIDEBAR_WIDTH;
-    static final double TOOL_ICON_SIZE = 25;
-    static final double TOOL_MARGIN_SIZE = 4;
-    static final double SM_TOOL_ICON_SIZE = 15;
-    static final double SM_TOOL_MARGIN_SIZE = 2;
+    public static final double SCENE_HEIGHT = 600;
+    public static final double SCENE_WIDTH = 1000;
+    public static final double SIDEBAR_WIDTH = 180;
+    public static final double DETAILS_ROW_HEIGHT = 12;
+    public static final double DETAILS_CELL_WIDTH = SIDEBAR_WIDTH / 2 - 11; //the constant is for margins
+    public static final double RENDERINGS_HEIGHT = SCENE_HEIGHT;
+    public static final double RENDERINGS_WIDTH  = SCENE_WIDTH - SIDEBAR_WIDTH;
+    public static final double TOOL_ICON_SIZE = 16;
+    public static final double TOOL_MARGIN_SIZE = 4;
+    public static final double SM_TOOL_ICON_SIZE = 15;
+    public static final double SM_TOOL_MARGIN_SIZE = 2;
 }
