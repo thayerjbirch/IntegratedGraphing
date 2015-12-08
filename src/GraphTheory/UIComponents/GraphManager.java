@@ -6,6 +6,8 @@
 package GraphTheory.UIComponents;
 
 import GraphTheory.Graphs.Graph;
+import GraphTheory.Graphs.GraphEdge;
+import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.SidebarManager;
 import GraphTheory.Utility.Logger;
@@ -36,6 +38,10 @@ public class GraphManager {
         graphsMap.put(e.name,e);
         graphsList.add(e);
         SidebarManager.addGraph(e);
+    }
+    
+    public static boolean addEdge(GraphVertex u, GraphVertex v){
+        return curGraphEntity.addEdge(u, v);
     }
     
     public static int size(){
@@ -77,5 +83,13 @@ public class GraphManager {
         }
         else
             Logger.log("Attempted to add a node to a null graph, operation aborted.");
+    }
+    
+    public static boolean removeVertex(GraphVertex v){
+        return curGraphEntity.removeVertex(v);
+    }
+    
+    public static boolean removeEdge(GraphEdge e){
+        return curGraphEntity.removeEdge(e);
     }
 }

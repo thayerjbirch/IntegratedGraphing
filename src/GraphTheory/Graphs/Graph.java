@@ -188,8 +188,8 @@ public class Graph implements GraphObject,Translatable{
      * @param start
      * @param end
      */
-    public void addEdge(GraphVertex start, GraphVertex end){
-        addEdge(start,end,Color.BLACK);
+    public GraphEdge addEdge(GraphVertex start, GraphVertex end){
+        return addEdge(start,end,Color.BLACK);
     }
     
     public void drawEdge(GraphEdge e){
@@ -198,10 +198,17 @@ public class Graph implements GraphObject,Translatable{
         graphContents.getChildren().add(e.line);
     }
     
-    public void removeEdge(GraphEdge e){
-        e.active = false;
-        edgeSet.remove(e);
-        this.graphContents.getChildren().remove(e.line);
+    public boolean removeEdge(GraphEdge e){
+        if(elementOf(e)){
+            e.active = false;
+            e.startNode.getAdjacentTo().remove(e.endNode);
+            e.endNode.getAdjacentTo().remove(e.startNode);
+            edgeSet.remove(e);
+            this.graphContents.getChildren().remove(e.line);
+            RenderingsManager.removeNode(e.line);
+            return true;
+        }
+        return false;     
     }
     
     /**
@@ -249,22 +256,35 @@ public class Graph implements GraphObject,Translatable{
         }
     }
     
-   
-    private GraphEdge elementOf(GraphEdge e){
+    public boolean elementOf(GraphVertex v){
+        for(GraphVertex u : vertexSet){
+            if(u == v){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean elementOf(GraphEdge e){
+        for(GraphEdge u : edgeSet){
+            if(u == e){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public GraphEdge findEdge(GraphVertex u, GraphVertex v){
+        GraphEdge tempEdge = new GraphEdge(this, u, v);
+        return findEdge(tempEdge);
+    }
+    
+    public GraphEdge findEdge(GraphEdge e){
         for(GraphEdge n : edgeSet){
             if(n.equals(e))
                 return n;
         }
         return null;
-    }
-    
-    public GraphEdge findEdge(GraphVertex u, GraphVertex v){
-        GraphEdge tempEdge = new GraphEdge(this, u, v);
-        return this.elementOf(tempEdge);
-    }
-    
-    public GraphEdge findEdge(GraphEdge e){
-        return this.elementOf(e);
     }
     
     //Sets the center handle to the average coordinates among all vertices
@@ -288,7 +308,6 @@ public class Graph implements GraphObject,Translatable{
     }
     
     public void toFront(){
-        System.out.println(edgeSet.size() + "," + vertexSet.size());
         for(GraphEdge e : edgeSet){
             //e.line.toFront();Known issue that toFront() doesn't work
             RenderingsManager.toFront(e.line);
@@ -297,5 +316,24 @@ public class Graph implements GraphObject,Translatable{
             //c.circle.toFront();Known issue that toFront() doesn't work
             RenderingsManager.toFront(c.circle);
         }
+    }
+    
+    public void verticesToFront(){
+        for(GraphVertex c : vertexSet){
+            RenderingsManager.toFront(c.circle);
+        }
+    }
+    
+    public boolean removeVertex(GraphVertex v){
+        if(elementOf(v)){
+            for(GraphEdge e : v.getEdges())
+                removeEdge(e);
+            for(GraphVertex n : v.getAdjacentTo())
+                n.getAdjacentTo().remove(v);
+            vertexSet.remove(v);
+            RenderingsManager.removeNode(v.circle);
+            return true;
+        }
+        return false;
     }
 }

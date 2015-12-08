@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  *
@@ -35,7 +36,7 @@ public class SidebarManager {
     private static TitledPane detailsPane;
     private static BorderPane detailsContentOrganizer;
     private static ScrollPane detailsContentScroll;
-    private static AnchorPane detailsContent;
+    private static VBox detailsContent;
     private static GridPane grid;
     
     public static GridPane setupSidebar(){
@@ -49,9 +50,11 @@ public class SidebarManager {
         detailsContentScroll = new ScrollPane();
         detailsContentScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
-        detailsContent = new AnchorPane();
+        detailsContent = new VBox();
         detailsContent.setPrefWidth(detailsContentScroll.getWidth());
         detailsContentScroll.setContent(detailsContent);
+        test();
+        
         
         detailsContentOrganizer = new BorderPane();
         detailsContentOrganizer.setCenter(detailsContentScroll);
@@ -100,6 +103,12 @@ public class SidebarManager {
         return grid;
     }
     
+    private static DetailsRow temp = new DetailsRow("hi","there","tooltip");
+    
+    public static void test(){
+        detailsContent.getChildren().add(temp.row);
+    }
+    
     public static void addGraph(GraphEntity e){        
         graphRoot.getChildren().add(e.tag);
         graphsContent.getSelectionModel().select(e.tag);
@@ -116,38 +125,4 @@ public class SidebarManager {
             detailsPane.setExpanded(true);
         }
     };
-    
-    public class DetailsRow{
-        HBox row = new HBox();
-        TextField leftField;
-        TextField rightField;
-        Tooltip tooltip;
-        
-        public DetailsRow(String left, String right, Tooltip tipIn){
-            leftField = new TextField(left);
-            rightField = new TextField(right);
-            leftField.setTooltip(tipIn);
-            rightField.setTooltip(tipIn);
-            leftField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
-            rightField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
-            row.setMaxHeight(GuiConstants.DETAILS_ROW_HEIGHT);
-            row.getChildren().addAll(leftField,rightField);
-        }
-        
-        public HBox getRow(){
-            return row;
-        }
-        
-        public String getRightText(){
-            return rightField.getText();
-        }
-        
-        public String getLeftText(){
-            return leftField.getText();
-        }
-        
-        public void setRightText(String textIn){
-            rightField.setText(textIn);
-        }
-    }
 }

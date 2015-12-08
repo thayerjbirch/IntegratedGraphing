@@ -19,7 +19,7 @@ import javafx.scene.layout.HBox;
  * @author Thayer
  */
 public class ToolManager {
-    private static ToggleGroup contents = new ToggleGroup();
+    private static final ToggleGroup contents = new ToggleGroup();
     
     public static HBox setupToolManager(){
         ToggleButton pointerButton = setupButton("PointerTool.png",pointerButtonPressed,
@@ -51,27 +51,28 @@ public class ToolManager {
         return button;        
     }
     
+    private static void setTool(Tool t, MouseEvent e){
+        currentTool = t;        
+        Utility.ensureAToggle(e);
+    }
+    
     static EventHandler<MouseEvent> pointerButtonPressed = (MouseEvent event) -> {
-        currentTool = Tool.POINTER;
-        Utility.ensureAToggle(event);
+        setTool(Tool.POINTER, event);
         Logger.log("Tool changed to the pointer tool.");
     };
     
     static EventHandler<MouseEvent> vertexButtonPressed = (MouseEvent event) -> {
-        currentTool = Tool.VERTEX;
-        Utility.ensureAToggle(event);
+        setTool(Tool.VERTEX, event);
         Logger.log("Tool changed to the create vertex tool.");
     };
     
     static EventHandler<MouseEvent> edgeButtonPressed = (MouseEvent event) -> {
-        currentTool = Tool.EDGE;
-        Utility.ensureAToggle(event);
+        setTool(Tool.EDGE, event);
         Logger.log("Tool changed to the create edge tool.");
     };
     
     static EventHandler<MouseEvent> deleteButtonPressed = (MouseEvent event) -> {
-        currentTool = Tool.DELETE;
-        Utility.ensureAToggle(event);
+        setTool(Tool.DELETE, event);
         Logger.log("Tool changed to the delete object tool");
     };
     

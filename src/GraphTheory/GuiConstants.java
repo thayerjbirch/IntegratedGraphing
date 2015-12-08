@@ -23,4 +23,5 @@ public class GuiConstants {
     public static final double TOOL_MARGIN_SIZE = 4;
     public static final double SM_TOOL_ICON_SIZE = 15;
     public static final double SM_TOOL_MARGIN_SIZE = 2;
+    public static final double HIGHLIGHT_BORDER_DEPTH = 35;
 }

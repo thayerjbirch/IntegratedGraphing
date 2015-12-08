@@ -68,18 +68,18 @@ public class GraphTest {
         double x = 0.0;
         double y = 0.0;
         Graph instance = new Graph(0,0);
-        instance.addNode(x, y);
+        instance.addVertex(x, y);
     }
 
     /**
-     * Test of addNode method, of class Graph.
+     * Test of addVertex method, of class Graph.
      */
     @Test
-    public void testAddNode_Point2D() {
-        System.out.println("addNode");
+    public void testAddVertex_Point2D() {
+        System.out.println("addVertex");
         Point2D p = new Point2D(0,0);
         Graph instance = new Graph(0,0);
-        instance.addNode(p);
+        instance.addVertex(p);
     }
 
     /**
@@ -99,7 +99,7 @@ public class GraphTest {
      * Test of addEdge method, of class Graph.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testAddEdge_GraphNode_GraphNode() {
+    public void testAddEdge_GraphVertex_GraphVertex() {
         System.out.println("addEdge");
         GraphVertex start = null;
         GraphVertex end = null;

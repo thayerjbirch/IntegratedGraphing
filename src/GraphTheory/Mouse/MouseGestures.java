@@ -13,6 +13,7 @@ import GraphTheory.Graphs.GraphObject.GraphLine;
 import GraphTheory.Graphs.Translatable;
 import static GraphTheory.Mouse.ToolManager.currentTool;
 import GraphTheory.UIComponents.GraphManager;
+import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -35,8 +36,8 @@ public final class MouseGestures {
     }
     
     public static void addGestures(GraphVertex g){
-        g.circle.setOnMousePressed(graphOnMousePressedEventHandler);
-        g.circle.setOnMouseDragged(graphOnMouseDraggedEventHandler);
+        g.circle.setOnMousePressed(vertexOnMousePressedEventHandler);
+        g.circle.setOnMouseDragged(vertexOnMouseDraggedEventHandler);
     }
     
     public static void addGestures(GraphEdge g){
@@ -60,16 +61,38 @@ public final class MouseGestures {
             case POINTER:
                 handlePointerPressed(event, (Translatable) ((GraphLine)event.getSource()).getRepresents());
                 break;
-        }        
+            case DELETE:
+                GraphManager.removeEdge((GraphEdge) ((GraphLine)event.getSource()).getRepresents());
+                break;
+        }       
     };
     
-    static EventHandler<MouseEvent> nodeOnMousePressedEventHandler = (MouseEvent event) -> {
+    static EventHandler<MouseEvent> vertexOnMousePressedEventHandler = (MouseEvent event) -> {
         switch(currentTool){
             case POINTER:
                 handlePointerPressed(event, (Translatable) ((GraphCircle)event.getSource()).getRepresents());
+                //RenderingsManager.setSelected( (GraphVertex) ((GraphCircle)event.getSource()).getRepresents());
+                break;
+            case EDGE:
+                if(RenderingsManager.getSelected() == null){
+                    RenderingsManager.setSelected( (GraphVertex) ((GraphCircle)event.getSource()).getRepresents());
+                    Logger.log("Set the starting vertex.");
+                }
+                else{
+                    if(GraphManager.addEdge(RenderingsManager.getSelected(),
+                                            (GraphVertex) ((GraphCircle)event.getSource()).getRepresents())){
+                        //If the adding the edge succeeds. It will fail if the two vertices are
+                        //in distinct Graphs
+                        RenderingsManager.setSelected(null);
+                    }
+                }
+                break;
+            case DELETE:
+                GraphManager.removeVertex( (GraphVertex) ((GraphCircle)event.getSource()).getRepresents());
                 break;
         }
     };
+    
     static EventHandler<MouseEvent> graphOnMouseDraggedEventHandler = (MouseEvent event) -> {
         switch(currentTool){
             case POINTER:
@@ -77,10 +100,19 @@ public final class MouseGestures {
                 break;
         }        
     };
+    
     static EventHandler<MouseEvent> edgeOnMouseDraggedEventHandler = (MouseEvent event) -> {
         switch(currentTool){
             case POINTER:
                 handlePointerDragged(event, (Translatable) ((GraphLine)event.getSource()).getRepresents());
+                break;
+        }        
+    };
+    
+    static EventHandler<MouseEvent> vertexOnMouseDraggedEventHandler = (MouseEvent event) -> {
+        switch(currentTool){
+            case POINTER:
+                handlePointerDragged(event, (Translatable) ((GraphCircle)event.getSource()).getRepresents());
                 break;
         }        
     };
@@ -97,6 +129,7 @@ public final class MouseGestures {
     protected static void handlePointerPressed(MouseEvent event, Translatable t){
         oldX = event.getSceneX();
         oldY = event.getSceneY();
+        RenderingsManager.removeGlow();
         if(t instanceof Graph)
             GraphManager.setCurrentGraph((Graph)t);
         else if(t instanceof GraphVertex)

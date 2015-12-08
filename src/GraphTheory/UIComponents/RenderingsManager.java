@@ -5,10 +5,14 @@
  */
 package GraphTheory.UIComponents;
 
+import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.GuiConstants;
 import GraphTheory.Mouse.MouseGestures;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -16,6 +20,9 @@ import javafx.scene.layout.Pane;
  */
 public class RenderingsManager {
     private static Pane renderings;
+    private static DropShadow borderGlow;
+    private static GraphVertex selectedVertex;
+    
     
     private RenderingsManager(){};
     
@@ -26,7 +33,37 @@ public class RenderingsManager {
         renderings.setStyle("-fx-background-color: white;");
         MouseGestures.addGestures(renderings);
         
+        borderGlow = new DropShadow(GuiConstants.HIGHLIGHT_BORDER_DEPTH,Color.GOLD);
+        borderGlow.setSpread(.75);
+//        borderGlow.setOffsetY(0f);
+//        borderGlow.setOffsetX(0f);
+//        borderGlow.setColor(Color.LIGHTGOLDENRODYELLOW);
+//        borderGlow.setWidth(GuiConstants.HIGHLIGHT_BORDER_DEPTH);
+//        borderGlow.setHeight(GuiConstants.HIGHLIGHT_BORDER_DEPTH);
+        
         return renderings;
+    }
+    
+    public static void setSelected(GraphVertex nodeIn){
+        if(selectedVertex!=null){
+            selectedVertex.circle.setEffect(null);
+        }
+        if(nodeIn!=null){
+            selectedVertex = nodeIn;
+            selectedVertex.circle.setEffect(borderGlow);
+        } else {
+            selectedVertex = null;
+        }
+    }
+    
+    public static GraphVertex getSelected(){
+        return selectedVertex;
+    }
+    
+    public static void removeGlow(){
+        if(selectedVertex!=null)
+            selectedVertex.circle.setEffect(null);
+        selectedVertex = null;
     }
     
     public static void addNode(Node nodeIn){
