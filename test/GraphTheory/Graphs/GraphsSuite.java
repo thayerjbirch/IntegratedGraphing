@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Thayer
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({GraphTheory.Graphs.GraphNodeTest.class, GraphTheory.Graphs.GraphTest.class, GraphTheory.Graphs.GraphEdgeTest.class})
+@Suite.SuiteClasses({GraphTheory.Graphs.GraphVertexTest.class, GraphTheory.Graphs.GraphTest.class, GraphTheory.Graphs.GraphEdgeTest.class})
 public class GraphsSuite {
 
     @BeforeClass

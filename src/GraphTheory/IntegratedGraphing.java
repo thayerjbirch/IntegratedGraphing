@@ -8,6 +8,9 @@ package GraphTheory;
 import GraphTheory.Graphs.Graph;
 import GraphTheory.Mouse.MouseGestures;
 import GraphTheory.Mouse.ToolManager;
+import GraphTheory.UIComponents.GraphManager;
+import GraphTheory.UIComponents.RenderingsManager;
+import GraphTheory.UIComponents.SidebarManager;
 import GraphTheory.Utility.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -16,16 +19,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -38,15 +33,6 @@ public class IntegratedGraphing extends Application {
     public static String mainDirectory = null;
     BorderPane root;
     Canvas canvas;
-    TitledPane graphsPane;
-    BorderPane graphsContentOrganizer;
-    ScrollPane graphsContentScroll;
-    AnchorPane graphsContent;
-    TitledPane detailsPane;
-    BorderPane detailsContentOrganizer;
-    ScrollPane detailsContentScroll;
-    AnchorPane detailsContent;
-    VBox sidebar;
     ToolBar toolbar;
     ToolManager toolManager;
     
@@ -61,8 +47,8 @@ public class IntegratedGraphing extends Application {
     }
     
     private void setupRoutine(Stage primaryStage){
-        mainDirectory = new String(findDirectory("img") + File.separator);
-        imageDirectory = new String(mainDirectory + "img" + File.separator);
+        mainDirectory = findDirectory("img") + File.separator;
+        imageDirectory = mainDirectory + "img" + File.separator;
         Logger.initialize(new File(mainDirectory), true);
         Logger.log("Application Started.");
         Logger.log("The application directory:" + mainDirectory);
@@ -77,6 +63,9 @@ public class IntegratedGraphing extends Application {
         
         primaryStage.setScene(mainScene);
         primaryStage.show();
+        
+        GraphManager.addGraph("K6",Graph.buildKGraph(6));
+        GraphManager.addGraph("K4",Graph.buildKGraph(4));
     }
     
     public String findDirectory(String targetDir){
@@ -110,7 +99,7 @@ public class IntegratedGraphing extends Application {
         root.getChildren().add(canvas);
         
         Graph myGraph = Graph.buildKGraph(canvas.getWidth() / 2, canvas.getHeight() / 2, 8);
-        myGraph.reorderNodes(100);
+        myGraph.reorderVertexs(100);
         MouseGestures.addGestures(myGraph);
         System.out.println(myGraph.getEdgeSet().size());
         //myGraph.compliment();
@@ -123,25 +112,13 @@ public class IntegratedGraphing extends Application {
     
     private void createLayout(Scene s, BorderPane root){
         Logger.log("Creating the main content pane.",1);
-        StackPane renderings = new StackPane();
-        renderings.prefHeight(GuiConstants.RENDERINGS_HEIGHT);
-        renderings.prefWidth(GuiConstants.RENDERINGS_WIDTH);
-        renderings.setStyle("-fx-background-color: white;");
-        root.setCenter(renderings);
+        root.setCenter(RenderingsManager.setupRenderings());
         
         Logger.log("Creating the menus:",1);
         createMenus(s,root);
         
-        Logger.log("Creating the sidebar:",1);
-        setupGraphsPane();
-        
-        Logger.log("Aligning the components.",1);
-        GridPane grid = new GridPane();        
-        graphsContentOrganizer.prefHeightProperty().bind(grid.heightProperty());
-        detailsContentOrganizer.prefHeightProperty().bind(grid.heightProperty());
-        grid.add(graphsPane, 0, 0);
-        grid.add(detailsPane, 0, 2);
-        root.setRight(grid);
+        Logger.log("Creating the sidebar:",1);        
+        root.setRight(SidebarManager.setupSidebar());
         
         Logger.log("Layout setup complete.",1);
     }
@@ -162,76 +139,5 @@ public class IntegratedGraphing extends Application {
         VBox menuContainer = new VBox(mainMenu,toolbar);
         root.setTop(menuContainer);
         Logger.log("Setting up menus complete.", 2);
-    }
-    
-    private void setupGraphsPane(){
-        detailsPane = new TitledPane();
-        detailsPane.setText("Details");
-        detailsPane.setCollapsible(true);
-        detailsPane.setPrefWidth(GuiConstants.SIDEBAR_WIDTH);
-        
-        detailsContentScroll = new ScrollPane();
-        detailsContentScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
-        detailsContent = new AnchorPane();
-        detailsContent.setPrefWidth(detailsContentScroll.getWidth());
-        detailsContentScroll.setContent(detailsContent);
-        
-        detailsContentOrganizer = new BorderPane();
-        detailsContentOrganizer.setCenter(detailsContentScroll);
-        
-        detailsPane.setContent(detailsContentOrganizer);
-        
-        graphsContent = new AnchorPane();
-        graphsContent.setPrefWidth(GuiConstants.SIDEBAR_WIDTH);
-        
-        graphsContentScroll = new ScrollPane();
-        graphsContentScroll.setContent(graphsContent);
-        graphsContentScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
-        graphsContentOrganizer = new BorderPane();
-        graphsContentOrganizer.setCenter(graphsContentScroll);        
-        
-        graphsPane = new TitledPane();
-        graphsPane.setText("Graphs");
-        graphsPane.setCollapsible(true);
-        graphsPane.setPrefWidth(GuiConstants.SIDEBAR_WIDTH);
-        graphsPane.setContent(graphsContentOrganizer);
-        
-        Logger.log("Graph pane setup complete.", 2);
-    }
-    
-    public class DetailsRow{
-        HBox row = new HBox();
-        TextField leftField;
-        TextField rightField;
-        Tooltip tooltip;
-        
-        public DetailsRow(String left, String right, Tooltip tipIn){
-            leftField = new TextField(left);
-            rightField = new TextField(right);
-            leftField.setTooltip(tipIn);
-            rightField.setTooltip(tipIn);
-            leftField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
-            rightField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
-            row.setMaxHeight(GuiConstants.DETAILS_ROW_HEIGHT);
-            row.getChildren().addAll(leftField,rightField);
-        }
-        
-        public HBox getRow(){
-            return row;
-        }
-        
-        public String getRightText(){
-            return rightField.getText();
-        }
-        
-        public String getLeftText(){
-            return leftField.getText();
-        }
-        
-        public void setRightText(String textIn){
-            rightField.setText(textIn);
-        }
     }
 }

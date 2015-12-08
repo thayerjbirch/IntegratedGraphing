@@ -3,14 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/GraphEdge.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Mouse/ToolManager.java</file>
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/GuiConstants.java</file>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/Graph.java</file>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/Translatable.java</file>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/GraphNode.java</file>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Mouse/Utility.java</file>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/GraphObject.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Mouse/MouseGestures.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Utility/Utility.java</file>
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/IntegratedGraphing.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/GraphManager.java</file>
         </group>
     </open-files>
 </project-private>

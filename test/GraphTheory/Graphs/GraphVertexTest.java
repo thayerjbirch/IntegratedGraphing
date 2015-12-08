@@ -17,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author Thayer
  */
-public class GraphNodeTest {
+public class GraphVertexTest {
     
-    public GraphNodeTest() {
+    public GraphVertexTest() {
     }
     
     @BeforeClass

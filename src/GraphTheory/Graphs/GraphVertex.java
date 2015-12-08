@@ -8,17 +8,16 @@ package GraphTheory.Graphs;
 import java.util.ArrayList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  *
  * @author Thayer
  */
-public class GraphNode implements GraphObject,Translatable{
+public class GraphVertex implements GraphObject,Translatable{
     private int degree;
     public GraphCircle circle;
     private Graph parent;
-    private ArrayList<GraphNode> adjacentTo = new ArrayList();
+    private ArrayList<GraphVertex> adjacentTo = new ArrayList();
     private ArrayList<GraphEdge> edges = new ArrayList();
 
     public ArrayList<GraphEdge> getEdges() {
@@ -36,8 +35,12 @@ public class GraphNode implements GraphObject,Translatable{
     public int getDegree() {
         return degree;
     }
+    
+    public Graph getParent(){
+        return parent;
+    }
 
-    public ArrayList<GraphNode> getAdjacentTo() {
+    public ArrayList<GraphVertex> getAdjacentTo() {
         return adjacentTo;
     }    
     
@@ -67,21 +70,21 @@ public class GraphNode implements GraphObject,Translatable{
     
     public void updateEdges(){
         for(GraphEdge e : edges){
-            e.nodeMoved(this);
+            e.vertexMoved(this);
         }
     }
     
-    public GraphNode(Graph g, double x, double y, Color color){
+    public GraphVertex(Graph g, double x, double y, Color color){
         degree = 0;
         parent = g;
-        circle = new GraphCircle(g.nodeSize,this);
+        circle = new GraphCircle(g.vertexSize,this);
         circle.setCenterX(x);
         circle.setCenterY(y);
         circle.setFill(color);
         circle.setStroke(color);
     }
     
-    public GraphNode(Graph g, double x, double y){
+    public GraphVertex(Graph g, double x, double y){
         this(g,x,y,Color.BLACK);
     }
 
@@ -89,7 +92,7 @@ public class GraphNode implements GraphObject,Translatable{
     public void translate(double x, double y) {
         circle.translate(x, y);
         for(GraphEdge e : edges)
-            e.nodeMoved(this);
+            e.vertexMoved(this);
         parent.recenterCircle();
     }
 }

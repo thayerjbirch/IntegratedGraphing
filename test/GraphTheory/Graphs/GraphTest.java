@@ -5,7 +5,7 @@
  */
 package GraphTheory.Graphs;
 
-import GraphTheory.Graphs.GraphNode;
+import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.Graph;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -88,8 +88,8 @@ public class GraphTest {
     @Test(expected=IllegalArgumentException.class)
     public void testAddEdge_3args() {
         System.out.println("addEdge");
-        GraphNode start = null;
-        GraphNode end = null;
+        GraphVertex start = null;
+        GraphVertex end = null;
         Color color = Color.ANTIQUEWHITE;
         Graph instance = new Graph(0,0);
         instance.addEdge(start, end, color);
@@ -101,8 +101,8 @@ public class GraphTest {
     @Test(expected=IllegalArgumentException.class)
     public void testAddEdge_GraphNode_GraphNode() {
         System.out.println("addEdge");
-        GraphNode start = null;
-        GraphNode end = null;
+        GraphVertex start = null;
+        GraphVertex end = null;
         Graph instance = new Graph(0,0);
         instance.addEdge(start, end);
     }

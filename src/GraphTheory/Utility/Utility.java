@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
  */
 public final class Utility {
     public static Image loadImage(String imageName){
-        String path = new String(IntegratedGraphing.imageDirectory + imageName);
+        String path = IntegratedGraphing.imageDirectory + imageName;
         File imgFile = new File(path);
         if(imgFile.exists())
             return new Image(imgFile.toURI().toString());

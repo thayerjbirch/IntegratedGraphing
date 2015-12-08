@@ -5,18 +5,12 @@
  */
 package GraphTheory.Mouse;
 
-import GraphTheory.GuiConstants;
-import GraphTheory.IntegratedGraphing;
-import GraphTheory.UIComponents.ImageToggleButton;
 import GraphTheory.Utility.Logger;
 import GraphTheory.Utility.Utility;
-import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
@@ -65,16 +59,19 @@ public class ToolManager {
     
     static EventHandler<MouseEvent> vertexButtonPressed = (MouseEvent event) -> {
         currentTool = Tool.VERTEX;
+        Utility.ensureAToggle(event);
         Logger.log("Tool changed to the create vertex tool.");
     };
     
     static EventHandler<MouseEvent> edgeButtonPressed = (MouseEvent event) -> {
         currentTool = Tool.EDGE;
+        Utility.ensureAToggle(event);
         Logger.log("Tool changed to the create edge tool.");
     };
     
     static EventHandler<MouseEvent> deleteButtonPressed = (MouseEvent event) -> {
         currentTool = Tool.DELETE;
+        Utility.ensureAToggle(event);
         Logger.log("Tool changed to the delete object tool");
     };
     

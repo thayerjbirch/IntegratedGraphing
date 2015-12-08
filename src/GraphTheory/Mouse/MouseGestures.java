@@ -7,15 +7,16 @@ package GraphTheory.Mouse;
 
 import GraphTheory.Graphs.Graph;
 import GraphTheory.Graphs.GraphEdge;
-import GraphTheory.Graphs.GraphNode;
+import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.GraphObject.GraphCircle;
 import GraphTheory.Graphs.GraphObject.GraphLine;
 import GraphTheory.Graphs.Translatable;
 import static GraphTheory.Mouse.ToolManager.currentTool;
+import GraphTheory.UIComponents.GraphManager;
+import GraphTheory.Utility.Logger;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
+import javafx.scene.layout.Pane;
 
 /**
  *
@@ -33,7 +34,7 @@ public final class MouseGestures {
         g.circle.setOnMouseDragged(graphOnMouseDraggedEventHandler);
     }
     
-    public static void addGestures(GraphNode g){
+    public static void addGestures(GraphVertex g){
         g.circle.setOnMousePressed(graphOnMousePressedEventHandler);
         g.circle.setOnMouseDragged(graphOnMouseDraggedEventHandler);
     }
@@ -41,6 +42,10 @@ public final class MouseGestures {
     public static void addGestures(GraphEdge g){
         g.line.setOnMousePressed(edgeOnMousePressedEventHandler);
         g.line.setOnMouseDragged(edgeOnMouseDraggedEventHandler);
+    }
+    
+    public static void addGestures(Pane p){
+        p.setOnMouseClicked(paneOnMouseClickedEventHandler);
     }
     
     static EventHandler<MouseEvent> graphOnMousePressedEventHandler = (MouseEvent event) -> {
@@ -80,9 +85,24 @@ public final class MouseGestures {
         }        
     };
     
+    static EventHandler<MouseEvent> paneOnMouseClickedEventHandler = (MouseEvent event) -> {
+        switch(currentTool){
+            case VERTEX:
+                GraphManager.addVertex(event.getX(), event.getY());
+                Logger.log("Vertex added at (" + event.getX() + "," + event.getY() + ").");
+                break;
+        }        
+    };
+    
     protected static void handlePointerPressed(MouseEvent event, Translatable t){
         oldX = event.getSceneX();
         oldY = event.getSceneY();
+        if(t instanceof Graph)
+            GraphManager.setCurrentGraph((Graph)t);
+        else if(t instanceof GraphVertex)
+            GraphManager.setCurrentGraph(((GraphVertex)t).getParent());
+        else if(t instanceof GraphEdge)
+            GraphManager.setCurrentGraph(((GraphEdge)t).getParent());
     }
     
     protected static void handlePointerDragged(MouseEvent event, Translatable t){
