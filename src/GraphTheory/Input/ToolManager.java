@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GraphTheory.Mouse;
+package GraphTheory.Input;
 
 import GraphTheory.Utility.Logger;
 import GraphTheory.Utility.Utility;

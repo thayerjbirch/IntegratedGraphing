@@ -7,7 +7,7 @@ package GraphTheory.UIComponents;
 
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.GuiConstants;
-import GraphTheory.Mouse.MouseGestures;
+import GraphTheory.Input.MouseGestures;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;

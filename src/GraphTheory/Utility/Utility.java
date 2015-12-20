@@ -5,11 +5,15 @@
  */
 package GraphTheory.Utility;
 
+import GraphTheory.Graphs.Graph;
 import GraphTheory.GuiConstants;
 import GraphTheory.IntegratedGraphing;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.ToggleButton;
@@ -67,4 +71,5 @@ public final class Utility {
         if(srcButton.getToggleGroup().getSelectedToggle() == null)
             srcButton.setSelected(true);
     }
+
 }

@@ -20,16 +20,39 @@ import java.util.TreeMap;
  * @author Thayer
  */
 public class GraphManager {    
-    static Map<String,GraphEntity> graphsMap = new TreeMap<>();
-    static ArrayList<GraphEntity> graphsList = new ArrayList<>();
+    private static Map<String,GraphEntity> graphsMap = new TreeMap<>();
+    private static ArrayList<GraphEntity> graphsList = new ArrayList<>();
     public static GraphEntity curGraphEntity;
     
     private GraphManager(){};
     
+    public static ArrayList getGraphs(){
+        return graphsList;
+    }
+
+    public static ArrayList<String> getGraphNames(){
+       ArrayList<String> names = new ArrayList<>();
+       for(GraphEntity e : graphsList)
+           names.add(e.name);
+       return names;
+    }
+    
+    public static GraphEntity get(int i){
+        return graphsList.get(i);
+    }
+
+    public static GraphEntity get(String name){
+        return graphsMap.get(name);
+    }
+
+    public static GraphEntity getCurrentGraph(){
+        return curGraphEntity;
+    }
+    
     public static void addGraph(Graph g){
         addGraph(new GraphEntity(g)); 
     }
-    
+     
     public static void addGraph(String name, Graph g){
         addGraph(new GraphEntity(name,g));        
     }
@@ -55,7 +78,9 @@ public class GraphManager {
     }
     
     public static void setCurrentGraph(String tag){
-        setCurrentGraph(graphsMap.get(tag));
+        GraphEntity e = graphsMap.get(tag);
+        if(e!=null)
+            setCurrentGraph(e);
     }
     
     public static void setCurrentGraph(Graph g){
@@ -65,8 +90,9 @@ public class GraphManager {
                 temp = e;
                 break;
             }
-        if(temp!=null)
+        if(temp!=null){
             setCurrentGraph(temp);
+        }
         else
             Logger.log("Could not find an entity containing the specified graph.");
     }
@@ -75,8 +101,10 @@ public class GraphManager {
         curGraphEntity = e;
         curGraphEntity.toFront();
         SidebarManager.setSelected(e);
-        Logger.log("Selected graph: " + curGraphEntity.toString());
+        SidebarManager.setDetails(e);
+        Logger.log("Selected graph: " + curGraphEntity.getName());
     }
+    
     public static void addVertex(double x, double y){
         if(curGraphEntity != null){
             curGraphEntity.addVertex(x, y);
@@ -91,5 +119,9 @@ public class GraphManager {
     
     public static boolean removeEdge(GraphEdge e){
         return curGraphEntity.removeEdge(e);
+    }
+    
+    public static boolean hasGraph(String name){
+        return graphsMap.containsKey(name);
     }
 }

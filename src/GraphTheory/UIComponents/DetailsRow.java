@@ -6,6 +6,8 @@
 package GraphTheory.UIComponents;
 
 import GraphTheory.GuiConstants;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
@@ -20,18 +22,34 @@ public class DetailsRow{
     Label rightField;
     Tooltip tooltip;
 
-    public DetailsRow(String left, String right, String ttip){
-        leftField = new Label(left);
-        rightField = new Label(right);
+    public DetailsRow(String left, SimpleStringProperty right, String ttip){
         Tooltip tipIn = new Tooltip(ttip);
+        
+        leftField = new Label(left);
         leftField.setTooltip(tipIn);
+        leftField.setMinHeight(GuiConstants.DETAILS_CELL_HEIGHT);
+        leftField.setMinWidth(GuiConstants.DETAILS_CELL_WIDTH);
+        leftField.setStyle("-fx-border-color:grey; -fx-background-color: white;");
+        leftField.setPadding(GuiConstants.DETAILS_LABEL_INSETS);
+        
+        rightField = new Label();//right);
+        rightField.textProperty().bind(right);
         rightField.setTooltip(tipIn);
-//        leftField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
-//        rightField.setPrefWidth(GuiConstants.DETAILS_CELL_WIDTH);
+        rightField.setMinHeight(GuiConstants.DETAILS_CELL_HEIGHT);
+        rightField.setMinWidth(GuiConstants.DETAILS_CELL_WIDTH);
+        rightField.setAlignment(Pos.CENTER_RIGHT);
+        rightField.setStyle("-fx-border-color:grey; -fx-background-color: white;");
+        rightField.setPadding(GuiConstants.DETAILS_LABEL_INSETS);
+        
         row.setMaxHeight(GuiConstants.DETAILS_ROW_HEIGHT);
-        row.setMaxWidth(GuiConstants.SIDEBAR_WIDTH);
-        row.setPrefWidth(GuiConstants.SIDEBAR_WIDTH);
+        row.setMaxWidth(GuiConstants.DETAILS_ROW_WIDTH);
+        row.setPrefWidth(GuiConstants.DETAILS_ROW_WIDTH);
+
         row.getChildren().addAll(leftField,rightField);
+    }
+
+    public void setProperty(SimpleStringProperty s){
+        rightField.textProperty().bind(s);
     }
 
     public HBox getRow(){

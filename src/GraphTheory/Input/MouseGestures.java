@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package GraphTheory.Mouse;
+package GraphTheory.Input;
 
 import GraphTheory.Graphs.Graph;
 import GraphTheory.Graphs.GraphEdge;
@@ -11,7 +11,7 @@ import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.GraphObject.GraphCircle;
 import GraphTheory.Graphs.GraphObject.GraphLine;
 import GraphTheory.Graphs.Translatable;
-import static GraphTheory.Mouse.ToolManager.currentTool;
+import static GraphTheory.Input.ToolManager.currentTool;
 import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;

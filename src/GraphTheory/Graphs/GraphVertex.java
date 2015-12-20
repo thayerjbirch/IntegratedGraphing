@@ -6,6 +6,7 @@
 package GraphTheory.Graphs;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -14,7 +15,6 @@ import javafx.scene.paint.Color;
  * @author Thayer
  */
 public class GraphVertex implements GraphObject,Translatable{
-    private int degree;
     public GraphCircle circle;
     private Graph parent;
     private ArrayList<GraphVertex> adjacentTo = new ArrayList();
@@ -33,7 +33,15 @@ public class GraphVertex implements GraphObject,Translatable{
     }
 
     public int getDegree() {
-        return degree;
+        return adjacentTo.size();
+    }
+
+    public void addAdjacent(GraphVertex v){
+        adjacentTo.add(v);
+    }
+
+    public void removeAdjacent(GraphVertex v){
+        adjacentTo.remove(v);
     }
     
     public Graph getParent(){
@@ -75,7 +83,6 @@ public class GraphVertex implements GraphObject,Translatable{
     }
     
     public GraphVertex(Graph g, double x, double y, Color color){
-        degree = 0;
         parent = g;
         circle = new GraphCircle(g.vertexSize,this);
         circle.setCenterX(x);
@@ -87,7 +94,16 @@ public class GraphVertex implements GraphObject,Translatable{
     public GraphVertex(Graph g, double x, double y){
         this(g,x,y,Color.BLACK);
     }
-
+    
+    public BitSet adjecentTo(){
+        BitSet adj = new BitSet(parent.order());
+        ArrayList<GraphVertex> vertices = parent.getVertexSet();
+        for(int i = 0; i < vertices.size(); i++)
+            if(adjacentTo.contains(vertices.get(i)))
+                adj.set(i);
+        return adj;
+    }
+    
     @Override
     public void translate(double x, double y) {
         circle.translate(x, y);

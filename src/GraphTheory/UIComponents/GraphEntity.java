@@ -8,11 +8,11 @@ package GraphTheory.UIComponents;
 import GraphTheory.Graphs.Graph;
 import GraphTheory.Graphs.GraphEdge;
 import GraphTheory.Graphs.GraphVertex;
-import GraphTheory.Mouse.MouseGestures;
+import GraphTheory.Input.MouseGestures;
 import GraphTheory.Utility.Logger;
-import javafx.scene.control.Label;
+import java.util.ArrayList;
+import java.util.BitSet;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.AnchorPane;
 
 /**
  *
@@ -28,12 +28,48 @@ public class GraphEntity{
     }
 
     GraphEntity(String nameIn, Graph g){
-        name = nameIn;
+        name = checkName(nameIn);
         represents = g;
         tag = new TreeItem<>(name);
         
         MouseGestures.addGestures(g);  
         RenderingsManager.addNode(g.graphContents);
+    }
+
+    public Graph getGraph(){
+        return represents;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder b = new StringBuilder(name);
+        b.append('\n');
+        int[] seq = represents.getDegreeSequence();
+        for(int i = 0; i < seq.length; i++)
+            b.append(Integer.toString(seq[i])).append(' ');
+        b.append('\n');
+        ArrayList<BitSet> adj = represents.getAdjacencyMatrix();
+        for(BitSet row : adj)
+            b.append(row.toString()).append('\n');
+        return b.toString();
+    }
+
+    public static String checkName(String nameIn){
+        int i = 0;
+        String name = nameIn;
+        if(GraphManager.hasGraph(name)){
+            String suffix = " (1)";
+            while(GraphManager.hasGraph(name + suffix)){
+                i+=1;
+                suffix = " (" + Integer.toString(i) + ")";
+            }
+            name = nameIn + suffix;
+        }
+        return name;
     }
     
     public void addVertex(double x, double y){
@@ -65,19 +101,14 @@ public class GraphEntity{
     
     public boolean addEdge(GraphVertex u, GraphVertex v){
         if(represents.elementOf(u) && represents.elementOf(v)){
-            GraphEdge newEdge = represents.addEdge(u, v);
-            RenderingsManager.addNode(newEdge.line);
+            GraphEdge addedEdge = represents.drawEdge(u, v);
+            RenderingsManager.addNode(addedEdge.line);
             represents.verticesToFront();
             Logger.log("Edge added to graph " + name);
             return true;
         }
         Logger.log("Adding edge failed.");
         return false;
-    }
-    
-    @Override
-    public String toString(){
-        return name;
     }
     
     public void toFront(){

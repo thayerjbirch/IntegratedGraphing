@@ -7,20 +7,19 @@ package GraphTheory.UIComponents;
 
 import GraphTheory.GuiConstants;
 import GraphTheory.Utility.Logger;
+import java.util.ArrayList;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -38,7 +37,8 @@ public class SidebarManager {
     private static ScrollPane detailsContentScroll;
     private static VBox detailsContent;
     private static GridPane grid;
-    
+    private static DetailsSet graphDetails;
+
     public static GridPane setupSidebar(){
         Logger.log("Creating the details pane.", 2);
         detailsPane = new TitledPane();
@@ -53,8 +53,6 @@ public class SidebarManager {
         detailsContent = new VBox();
         detailsContent.setPrefWidth(detailsContentScroll.getWidth());
         detailsContentScroll.setContent(detailsContent);
-        test();
-        
         
         detailsContentOrganizer = new BorderPane();
         detailsContentOrganizer.setCenter(detailsContentScroll);
@@ -102,11 +100,15 @@ public class SidebarManager {
         Logger.log("Graph pane setup complete.", 2);
         return grid;
     }
+
+    public static void addDetails(){
+        graphDetails = new DetailsSet(GraphManager.get(GraphManager.size() - 1).represents);
+        detailsContent.getChildren().addAll(graphDetails.getRows());
+    }
     
-    private static DetailsRow temp = new DetailsRow("hi","there","tooltip");
-    
-    public static void test(){
-        detailsContent.getChildren().add(temp.row);
+    public static void setDetails(GraphEntity e){
+        if(graphDetails!=null) //prevents an error in initiation, better solution later maybe
+            graphDetails.changeTarget(e.represents);
     }
     
     public static void addGraph(GraphEntity e){        

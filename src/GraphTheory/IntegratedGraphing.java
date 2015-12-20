@@ -6,12 +6,14 @@
 package GraphTheory;
 
 import GraphTheory.Graphs.Graph;
-import GraphTheory.Mouse.MouseGestures;
-import GraphTheory.Mouse.ToolManager;
+import GraphTheory.Input.MouseGestures;
+import GraphTheory.Input.ToolManager;
 import GraphTheory.UIComponents.GraphManager;
+import GraphTheory.UIComponents.MenuManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
 import GraphTheory.Utility.Logger;
+import GraphTheory.Utility.Utility;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
@@ -33,7 +35,6 @@ public class IntegratedGraphing extends Application {
     public static String mainDirectory = null;
     BorderPane root;
     Canvas canvas;
-    ToolBar toolbar;
     ToolManager toolManager;
     
     public static void main(String[] args) {
@@ -42,8 +43,8 @@ public class IntegratedGraphing extends Application {
  
     @Override
     public void start(Stage primaryStage) throws IOException {
-        //testSetup(primaryStage);
-        setupRoutine(primaryStage);
+        testSetup(primaryStage);
+        //setupRoutine(primaryStage);
     }
     
     private void setupRoutine(Stage primaryStage){
@@ -66,6 +67,7 @@ public class IntegratedGraphing extends Application {
         
         GraphManager.addGraph("K6",Graph.buildKGraph(6));
         GraphManager.addGraph("K4",Graph.buildKGraph(4));
+        SidebarManager.addDetails();
     }
     
     public String findDirectory(String targetDir){
@@ -93,21 +95,30 @@ public class IntegratedGraphing extends Application {
     }
     
     private void testSetup(Stage primaryStage){
-        primaryStage.setTitle("Drawing Operations Test");
+        mainDirectory = findDirectory("img") + File.separator;
+        imageDirectory = mainDirectory + "img" + File.separator;
+        Logger.initialize(new File(mainDirectory), true);
+        Logger.log("Application Started.");
+        Logger.log("The application directory:" + mainDirectory);
+        Logger.log("Image resource directory:" + mainDirectory);
+        
+        primaryStage.setTitle("Rendered Graph Theory");
         root = new BorderPane();
-        canvas = new Canvas(800, 600);
-        root.getChildren().add(canvas);
+        Scene mainScene = new Scene(root,GuiConstants.SCENE_WIDTH,GuiConstants.SCENE_HEIGHT);
         
-        Graph myGraph = Graph.buildKGraph(canvas.getWidth() / 2, canvas.getHeight() / 2, 8);
-        myGraph.reorderVertexs(100);
-        MouseGestures.addGestures(myGraph);
-        System.out.println(myGraph.getEdgeSet().size());
-        //myGraph.compliment();
-        System.out.println(myGraph.getEdgeSet().size());
-        root.getChildren().add(myGraph.graphContents);
+        Logger.log("Setting up the layout:");
+        createLayout(mainScene,root);
         
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(mainScene);
         primaryStage.show();
+        
+        GraphManager.addGraph("K6",Graph.buildKGraph(6));
+        GraphManager.addGraph("K6",Graph.buildKGraph(6));
+        SidebarManager.addDetails();
+        
+        System.out.println(GraphManager.get(0).toString());
+        System.out.println(GraphManager.get(1).toString());
+        System.out.println(Graph.isomorphic(GraphManager.get(0).getGraph(), GraphManager.get(1).getGraph()));
     }
     
     private void createLayout(Scene s, BorderPane root){
@@ -115,7 +126,7 @@ public class IntegratedGraphing extends Application {
         root.setCenter(RenderingsManager.setupRenderings());
         
         Logger.log("Creating the menus:",1);
-        createMenus(s,root);
+        root.setTop(MenuManager.createMenus(s));
         
         Logger.log("Creating the sidebar:",1);        
         root.setRight(SidebarManager.setupSidebar());
@@ -123,21 +134,4 @@ public class IntegratedGraphing extends Application {
         Logger.log("Layout setup complete.",1);
     }
     
-    private void createMenus(Scene s, BorderPane root){
-        Logger.log("Setting up the main menu bar.",2);
-        MenuBar mainMenu = new MenuBar();
-        Menu menuFile = new Menu("File");
-        Menu menuGraphs = new Menu("Graphs");
-        Menu menuOptions = new Menu("Options");
-        mainMenu.getMenus().addAll(menuFile,menuGraphs,menuOptions);    
-        mainMenu.prefWidthProperty().bind(s.widthProperty()); 
-        
-        Logger.log("Setting up the toolbar.",2);
-        toolbar = new ToolBar();
-        toolbar.getItems().add(ToolManager.setupToolManager());
-        
-        VBox menuContainer = new VBox(mainMenu,toolbar);
-        root.setTop(menuContainer);
-        Logger.log("Setting up menus complete.", 2);
-    }
 }
