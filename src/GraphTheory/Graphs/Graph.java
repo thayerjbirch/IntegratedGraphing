@@ -7,13 +7,18 @@ package GraphTheory.Graphs;
 
 import GraphTheory.GuiConstants;
 import GraphTheory.Input.MouseGestures;
+import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -60,6 +65,7 @@ public class Graph implements GraphObject, Translatable {
     public SimpleStringProperty orderProperty = new SimpleStringProperty("0");
     public SimpleStringProperty sizeProperty = new SimpleStringProperty("0");
     public SimpleStringProperty densityProperty = new SimpleStringProperty("0");
+    private Object RenderingManager;
 
     public ArrayList<GraphVertex> getVertexSet() {
         return vertexSet;
@@ -69,7 +75,7 @@ public class Graph implements GraphObject, Translatable {
         return edgeSet;
     }
 
-    public ArrayList<GraphEdge> getEdges() {
+    public ArrayList<GraphEdge> getEdgeList() {
         return edges;
     }
 
@@ -93,6 +99,10 @@ public class Graph implements GraphObject, Translatable {
         this(GuiConstants.RENDERINGS_WIDTH / 2, GuiConstants.RENDERINGS_HEIGHT / 2);
     }
 
+    public Graph(int order){
+        this(GuiConstants.RENDERINGS_WIDTH / 2, GuiConstants.RENDERINGS_HEIGHT / 2, order);
+    }
+
     /**
      * Create an empty graph centered about (x,y).
      *
@@ -108,6 +118,7 @@ public class Graph implements GraphObject, Translatable {
         circle.setCenterX(x);
         circle.setCenterY(y);
         graphContents.getChildren().add(circle);
+        RenderingsManager.addNode(circle);
     }
 
     /**
@@ -137,7 +148,7 @@ public class Graph implements GraphObject, Translatable {
      */
     public static Graph buildKGraph(double x, double y, int order) {
         Graph g = new Graph(x, y, order);
-        for (GraphEdge e : g.getEdges()) {
+        for (GraphEdge e : g.getEdgeList()) {
             g.drawEdge(e);
         }
         for (GraphVertex v : g.getVertexSet()) {
@@ -161,14 +172,24 @@ public class Graph implements GraphObject, Translatable {
     public GraphVertex addVertex(double x, double y) {
         GraphVertex tempVertex = new GraphVertex(this, x, y);
         MouseGestures.addGestures(tempVertex);
-        for (GraphVertex v : vertexSet) {
-            addEdge(v, tempVertex);
-        }
-        vertexSet.add(tempVertex);
         graphContents.getChildren().add(tempVertex.circle);
-        vertexSetChanged();
+        RenderingsManager.addNode(tempVertex.circle);
+
+        newVertexSetup(tempVertex);
 
         return tempVertex;
+    }
+
+    private void newVertexSetup(GraphVertex u){
+        for (GraphVertex v : vertexSet) {
+            addEdge(v, u);
+        }
+        vertexSet.add(u);
+        vertexSetChanged();
+    }
+
+    public void addVertex(GraphVertex u){
+        newVertexSetup(u);
     }
 
     /**
@@ -215,7 +236,7 @@ public class Graph implements GraphObject, Translatable {
     }
 
     public GraphEdge drawEdge(GraphVertex start, GraphVertex end) {
-        GraphEdge e = findEdge(start, end);
+        GraphEdge e = getEdge(start, end);
         drawEdge(e);
         return e;
     }
@@ -230,16 +251,13 @@ public class Graph implements GraphObject, Translatable {
         e.endNode.addAdjacent(e.startNode);
 
         graphContents.getChildren().add(e.line);
+        RenderingsManager.addNode(e.line);
     }
 
     public boolean deleteEdge(GraphEdge e) {
-        e.startNode.getAdjacentTo().remove(e.endNode);
-        e.endNode.getAdjacentTo().remove(e.startNode);
-        edgeSet.remove(e);
+        Logger.log("Deleting edge.");
+        removeEdge(e);
         edges.remove(e);
-        this.graphContents.getChildren().remove(e.line);
-        RenderingsManager.removeNode(e.line);
-        edgeSetChanged();
         return true;
     }
 
@@ -322,9 +340,23 @@ public class Graph implements GraphObject, Translatable {
         return false;
     }
 
+    public GraphEdge getEdge(GraphVertex u, GraphVertex v){
+        return getEdge(new GraphEdge(this,u,v));
+    }
+    
     public GraphEdge findEdge(GraphVertex u, GraphVertex v) {
         GraphEdge tempEdge = new GraphEdge(this, u, v);
         return findEdge(tempEdge);
+    }
+
+    public GraphEdge getEdge(GraphEdge e) {
+        for (GraphEdge n : edges) {
+            if (n.equals(e)) {
+                return n;
+            }
+        }
+
+        return null;
     }
 
     public GraphEdge findEdge(GraphEdge e) {
@@ -375,7 +407,6 @@ public class Graph implements GraphObject, Translatable {
     }
 
     public boolean removeVertex(GraphVertex v) {
-        System.out.println(v.getEdges().size());
         if (elementOf(v)) {
             for (GraphEdge e : v.getEdges()) {
                 deleteEdge(e);
@@ -412,50 +443,95 @@ public class Graph implements GraphObject, Translatable {
         return degSeq;
     }
 
-    public ArrayList<BitSet> getAdjacencyMatrix(){
-        ArrayList<BitSet> adjs = new ArrayList<>();
-        for(GraphVertex v : vertexSet)
-            adjs.add(v.adjecentTo());
-        return adjs;
+    public int[][] getAdjacencyMatrix(){
+        int size = vertexSet.size();
+        int[][] adj = new int[size][size];//default initialized to zero
+        
+        for(GraphEdge e : edgeSet){
+            int startIndex, endIndex;
+            
+            startIndex = vertexSet.indexOf(e.startNode);
+            endIndex   = vertexSet.indexOf(e.endNode);
+
+            adj[startIndex][endIndex] = e.getLength();
+            adj[endIndex][startIndex] = e.getLength();
+        }
+        return adj;
+    }
+
+    public static boolean isomorphic(GraphEntity g1, GraphEntity g2){
+        return isomorphic(g1.getGraph(), g2.getGraph());
     }
 
     public static boolean isomorphic(Graph g1, Graph g2) {
+        Logger.log("Checking isomorphism between graphs.");
+        if(g1.getEdgeSet().size()!=g2.edgeSet.size())
+            return false;
         if (Arrays.equals(g1.getDegreeSequence(), g2.getDegreeSequence())) {
             return isoHelper(g1.getAdjacencyMatrix(),g2.getAdjacencyMatrix());
         }
         return false;
     }
 
-    private static boolean isoHelper(ArrayList<BitSet> adj1, ArrayList<BitSet> adj2){
-        if(adj1.isEmpty()){
-            Logger.log("Matched all vertices, success");
-            return true;
-        }
-
-        boolean retVal = false;
+    private static ArrayList<Map<Integer,Integer>> generateMutations(int size){
+        ArrayList<Integer> unmatched = new ArrayList<>(); 
+        for(int i=0; i<size;i++)
+           unmatched.add(i);
         
-        for(BitSet b : adj1){
-            for(BitSet c : adj2){
-                if(b.equals(c)){
-                    ArrayList bAdj = new ArrayList<>(adj1);
-                    ArrayList cAdj = new ArrayList<>(adj2);
-                    bAdj.remove(b);
-                    cAdj.remove(c);
-                    System.out.println("Found a match!");
-                    if(isoHelper(bAdj,cAdj)){
-                        retVal = true;
-                        System.out.println("Propegating upwards.");
-                        break;
-                    }
-                }
-//                else{
-//                    System.out.println("No further matches, dead end");
-//                    return false;
-//                }
+        ArrayList<Map<Integer,Integer>> muts = new ArrayList<>();
+        mutBuilder(0,unmatched,new HashMap<>(), muts);//helper function for recursive building vertex mappings
+        
+        return muts;
+    }
+
+    private static void mutBuilder(int index, ArrayList<Integer> unmatched,
+            Map<Integer,Integer> mapping, ArrayList<Map<Integer,Integer>> finished){
+        for(Integer i : unmatched){
+            Map<Integer,Integer> newMapping = new HashMap(mapping);
+            newMapping.put(index, i);
+
+            ArrayList<Integer> stillUnmatched = new ArrayList(unmatched);
+            stillUnmatched.remove(i);
+
+            if(unmatched.size() == 1){
+                finished.add(newMapping);
             }
-            if(retVal)
-                break;
+
+            mutBuilder(index+1,stillUnmatched,newMapping,finished);
         }
-        return retVal;
+    }
+
+    private static boolean isoHelper(int[][] adj1,int[][]adj2){//ArrayList<BitSet> adj1, ArrayList<BitSet> adj2){
+        ArrayList<Map<Integer,Integer>> muts = generateMutations(adj1.length);
+        boolean mappingFound = false;
+        for(Map mapping : muts){
+            if(compareMatrixMutation(adj1,adj2,mapping))
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean compareMatrixMutation(int[][] adj1, int[][] adj2, 
+            Map<Integer,Integer> mapping){
+        for(int i = 0; i < adj1.length; i++){
+            for(int j= 0; j < adj2.length; j++){
+                if(adj1[i][j]!=adj2[mapping.get(i)][mapping.get(j)])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public Node getCircle(){
+        return circle;
+    }
+
+    public void updateContentParents(){
+        for(GraphVertex v : vertexSet){
+            v.setParent(this);
+        }
+        for(GraphEdge e : edgeSet){
+            e.setParent(this);
+        }
     }
 }

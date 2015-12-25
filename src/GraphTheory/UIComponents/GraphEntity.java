@@ -9,6 +9,7 @@ import GraphTheory.Graphs.Graph;
 import GraphTheory.Graphs.GraphEdge;
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Input.MouseGestures;
+import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -24,7 +25,7 @@ public class GraphEntity{
     TreeItem<String> tag;
 
     GraphEntity(Graph g){
-        this(("Graph " + (GraphManager.size() + 1)),g);
+        this(("Graph " + (IntegratedGraphing.getGraphManager().size() + 1)),g);
     }
 
     GraphEntity(String nameIn, Graph g){
@@ -33,7 +34,6 @@ public class GraphEntity{
         tag = new TreeItem<>(name);
         
         MouseGestures.addGestures(g);  
-        RenderingsManager.addNode(g.graphContents);
     }
 
     public Graph getGraph(){
@@ -52,18 +52,22 @@ public class GraphEntity{
         for(int i = 0; i < seq.length; i++)
             b.append(Integer.toString(seq[i])).append(' ');
         b.append('\n');
-        ArrayList<BitSet> adj = represents.getAdjacencyMatrix();
-        for(BitSet row : adj)
-            b.append(row.toString()).append('\n');
+        int[][] adj = represents.getAdjacencyMatrix();
+        for(int i = 0; i < adj.length; i++){
+            for(int j = 0; j < adj.length; j++){
+                b.append(Integer.toString(adj[i][j])).append(' ');
+            }
+            b.append('\n');
+        }
         return b.toString();
     }
 
     public static String checkName(String nameIn){
         int i = 0;
         String name = nameIn;
-        if(GraphManager.hasGraph(name)){
+        if(IntegratedGraphing.getGraphManager().hasGraph(name)){
             String suffix = " (1)";
-            while(GraphManager.hasGraph(name + suffix)){
+            while(IntegratedGraphing.getGraphManager().hasGraph(name + suffix)){
                 i+=1;
                 suffix = " (" + Integer.toString(i) + ")";
             }

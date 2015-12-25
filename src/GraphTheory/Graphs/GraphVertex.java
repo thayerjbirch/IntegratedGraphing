@@ -17,8 +17,8 @@ import javafx.scene.paint.Color;
 public class GraphVertex implements GraphObject,Translatable{
     public GraphCircle circle;
     private Graph parent;
-    private ArrayList<GraphVertex> adjacentTo = new ArrayList();
-    private ArrayList<GraphEdge> edges = new ArrayList();
+    private ArrayList<GraphVertex> adjacentTo;
+    private ArrayList<GraphEdge> edges;
 
     public ArrayList<GraphEdge> getEdges() {
         return edges;
@@ -46,6 +46,10 @@ public class GraphVertex implements GraphObject,Translatable{
     
     public Graph getParent(){
         return parent;
+    }
+
+    protected void setParent(Graph newParent){
+        parent = newParent;
     }
 
     public ArrayList<GraphVertex> getAdjacentTo() {
@@ -89,6 +93,8 @@ public class GraphVertex implements GraphObject,Translatable{
         circle.setCenterY(y);
         circle.setFill(color);
         circle.setStroke(color);
+        adjacentTo = new ArrayList();
+        edges = new ArrayList();
     }
     
     public GraphVertex(Graph g, double x, double y){

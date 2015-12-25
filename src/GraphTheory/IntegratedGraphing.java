@@ -6,24 +6,18 @@
 package GraphTheory;
 
 import GraphTheory.Graphs.Graph;
-import GraphTheory.Input.MouseGestures;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MenuManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
 import GraphTheory.Utility.Logger;
-import GraphTheory.Utility.Utility;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -33,6 +27,7 @@ import javafx.stage.Stage;
 public class IntegratedGraphing extends Application {
     public static String imageDirectory = null;
     public static String mainDirectory = null;
+    private static GraphManager graphManager;
     BorderPane root;
     Canvas canvas;
     ToolManager toolManager;
@@ -43,8 +38,8 @@ public class IntegratedGraphing extends Application {
  
     @Override
     public void start(Stage primaryStage) throws IOException {
-        testSetup(primaryStage);
-        //setupRoutine(primaryStage);
+        //testSetup(primaryStage);
+        setupRoutine(primaryStage);
     }
     
     private void setupRoutine(Stage primaryStage){
@@ -65,8 +60,9 @@ public class IntegratedGraphing extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.show();
         
-        GraphManager.addGraph("K6",Graph.buildKGraph(6));
-        GraphManager.addGraph("K4",Graph.buildKGraph(4));
+        graphManager = new GraphManager();
+        IntegratedGraphing.getGraphManager().addGraph("K6",Graph.buildKGraph(6));
+        IntegratedGraphing.getGraphManager().addGraph("K4",Graph.buildKGraph(4));
         SidebarManager.addDetails();
     }
     
@@ -112,13 +108,13 @@ public class IntegratedGraphing extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.show();
         
-        GraphManager.addGraph("K6",Graph.buildKGraph(6));
-        GraphManager.addGraph("K6",Graph.buildKGraph(6));
+        IntegratedGraphing.getGraphManager().addGraph("K6",Graph.buildKGraph(6));
+        IntegratedGraphing.getGraphManager().addGraph("K6",Graph.buildKGraph(6));
         SidebarManager.addDetails();
         
-        System.out.println(GraphManager.get(0).toString());
-        System.out.println(GraphManager.get(1).toString());
-        System.out.println(Graph.isomorphic(GraphManager.get(0).getGraph(), GraphManager.get(1).getGraph()));
+//        System.out.println(IntegratedGraphing.getGraphManager().get(0).toString());
+//        System.out.println(IntegratedGraphing.getGraphManager().get(1).toString());
+//        System.out.println(Graph.isomorphic(IntegratedGraphing.getGraphManager().get(0), IntegratedGraphing.getGraphManager().get(1)));
     }
     
     private void createLayout(Scene s, BorderPane root){
@@ -134,4 +130,7 @@ public class IntegratedGraphing extends Application {
         Logger.log("Layout setup complete.",1);
     }
     
+    public static GraphManager getGraphManager(){
+        return graphManager;
+    }
 }

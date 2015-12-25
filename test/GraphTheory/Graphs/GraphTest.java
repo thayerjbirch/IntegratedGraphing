@@ -157,7 +157,7 @@ public class GraphTest {
         System.out.println("getEdges");
         Graph instance = new Graph();
         ArrayList<GraphEdge> expResult = null;
-        ArrayList<GraphEdge> result = instance.getEdges();
+        ArrayList<GraphEdge> result = instance.getEdgeList();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

@@ -20,70 +20,73 @@ import java.util.TreeMap;
  * @author Thayer
  */
 public class GraphManager {    
-    private static Map<String,GraphEntity> graphsMap = new TreeMap<>();
-    private static ArrayList<GraphEntity> graphsList = new ArrayList<>();
-    public static GraphEntity curGraphEntity;
+    private final Map<String,GraphEntity> graphsMap;
+    private final ArrayList<GraphEntity> graphsList;
+    public GraphEntity curGraphEntity;
     
-    private GraphManager(){};
+    public GraphManager(){
+        graphsMap = new TreeMap<>();
+        graphsList = new ArrayList<>();
+    }
     
-    public static ArrayList getGraphs(){
+    public ArrayList getGraphs(){
         return graphsList;
     }
 
-    public static ArrayList<String> getGraphNames(){
+    public ArrayList<String> getGraphNames(){
        ArrayList<String> names = new ArrayList<>();
        for(GraphEntity e : graphsList)
            names.add(e.name);
        return names;
     }
     
-    public static GraphEntity get(int i){
+    public GraphEntity get(int i){
         return graphsList.get(i);
     }
 
-    public static GraphEntity get(String name){
+    public GraphEntity get(String name){
         return graphsMap.get(name);
     }
 
-    public static GraphEntity getCurrentGraph(){
+    public GraphEntity getCurrentGraph(){
         return curGraphEntity;
     }
     
-    public static void addGraph(Graph g){
+    public void addGraph(Graph g){
         addGraph(new GraphEntity(g)); 
     }
      
-    public static void addGraph(String name, Graph g){
+    public void addGraph(String name, Graph g){
         addGraph(new GraphEntity(name,g));        
     }
     
-    private static void addGraph(GraphEntity e){
+    private void addGraph(GraphEntity e){
         graphsMap.put(e.name,e);
         graphsList.add(e);
         SidebarManager.addGraph(e);
     }
     
-    public static boolean addEdge(GraphVertex u, GraphVertex v){
+    public boolean addEdge(GraphVertex u, GraphVertex v){
         return curGraphEntity.addEdge(u, v);
     }
     
-    public static int size(){
+    public int size(){
         if(graphsList != null)
             return graphsList.size();
         return 0;
     }
     
-    public static void setCurrentGraph(int index){
+    public void setCurrentGraph(int index){
         setCurrentGraph(graphsList.get(index));
     }
     
-    public static void setCurrentGraph(String tag){
+    public void setCurrentGraph(String tag){
         GraphEntity e = graphsMap.get(tag);
         if(e!=null)
             setCurrentGraph(e);
     }
     
-    public static void setCurrentGraph(Graph g){
+    public void setCurrentGraph(Graph g){
         GraphEntity temp = null;
         for(GraphEntity e : graphsList)
             if(e.represents == g){
@@ -97,7 +100,7 @@ public class GraphManager {
             Logger.log("Could not find an entity containing the specified graph.");
     }
     
-    public static void setCurrentGraph(GraphEntity e){
+    public void setCurrentGraph(GraphEntity e){
         curGraphEntity = e;
         curGraphEntity.toFront();
         SidebarManager.setSelected(e);
@@ -105,7 +108,7 @@ public class GraphManager {
         Logger.log("Selected graph: " + curGraphEntity.getName());
     }
     
-    public static void addVertex(double x, double y){
+    public void addVertex(double x, double y){
         if(curGraphEntity != null){
             curGraphEntity.addVertex(x, y);
         }
@@ -113,15 +116,50 @@ public class GraphManager {
             Logger.log("Attempted to add a node to a null graph, operation aborted.");
     }
     
-    public static boolean removeVertex(GraphVertex v){
-        return curGraphEntity.removeVertex(v);
+    public boolean removeVertex(GraphVertex v){
+        return v.getParent().removeVertex(v);
     }
     
-    public static boolean removeEdge(GraphEdge e){
-        return curGraphEntity.removeEdge(e);
+    public boolean removeEdge(GraphEdge e){
+        return e.getParent().removeEdge(e);
+    }
+
+    public void removeGraph(GraphEntity e){
+        RenderingsManager.removeNode(e.getGraph().getCircle());
+        
+        SidebarManager.removeGraph(e);
+        
+        graphsList.remove(e);
+        graphsMap.remove(e.name);
     }
     
-    public static boolean hasGraph(String name){
+    public boolean hasGraph(String name){
         return graphsMap.containsKey(name);
+    }
+
+    public void unionGraphs(GraphEntity g1, GraphEntity g2){
+        Logger.log("Merging graphs " + g1.getName() + " and " + g2.getName());
+        Graph newG = new Graph();
+
+        Logger.log("Constructing vertex set.",1);
+        for(GraphVertex v : g1.getGraph().getVertexSet())
+            newG.addVertex(v);
+        for(GraphVertex v : g2.getGraph().getVertexSet())
+            newG.addVertex(v);
+        Logger.log("Added " + newG.order() + " vertices.", 1);
+
+        Logger.log("Constructing edge set.", 1);
+        for(GraphEdge e : g1.getGraph().getEdgeSet())
+            newG.drawEdge(e);
+        for(GraphEdge e : g2.getGraph().getEdgeSet())
+            newG.drawEdge(e);
+        Logger.log("Added " + newG.size() + " edges.", 1);
+        
+        removeGraph(g1);
+        removeGraph(g2);
+        
+        Logger.log("Adding the merged graph.", 1);
+        newG.updateContentParents();
+        addGraph(g1.name + " u " + g2.name, newG);
     }
 }

@@ -6,7 +6,6 @@
 package GraphTheory.Graphs;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 
 /**
  *
@@ -18,8 +17,9 @@ public class GraphEdge implements GraphObject,Translatable{
     protected GraphVertex endNode;
     private Graph parent;
     protected boolean active = false;
+    private int length;
     
-    public GraphEdge(Graph p, GraphVertex start, GraphVertex end, Color color){
+    public GraphEdge(Graph p, GraphVertex start, GraphVertex end, Color color, int lengthIn){
         parent = p;
         if(p==null||start==null||end==null||color==null)
             throw new IllegalArgumentException("Passed a null value to GraphEdge constructor.");
@@ -28,17 +28,37 @@ public class GraphEdge implements GraphObject,Translatable{
         line = new GraphLine(start.getX(),start.getY(),end.getX(),end.getY(),this);
         line.setStrokeWidth(p.strokeSize);
         line.setStroke(color);
-        
+        length = lengthIn;
     }
     
     public GraphEdge(Graph p, GraphVertex start, GraphVertex end){
-        this(p,start,end,Color.BLACK);
+        this(p,start,end,1);
+    }
+    
+    public GraphEdge(Graph p, GraphVertex start, GraphVertex end, Color color){
+        this(p,start,end,color,1);
+    }
+
+    public GraphEdge(Graph p, GraphVertex start, GraphVertex end, int lengthIn){
+        this(p,start,end,Color.BLACK,lengthIn);
     }
     
     public Graph getParent(){
         return parent;
     }
-    
+
+    protected void setParent(Graph g){
+        parent = g;
+    }
+
+    public void setLength(int x){
+        length = x;
+    }
+
+    public int getLength(){
+        return length;
+    }
+
     @Override
     public boolean equals(Object o){
         if(!(o instanceof GraphEdge))

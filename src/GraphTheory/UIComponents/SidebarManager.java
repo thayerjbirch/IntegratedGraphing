@@ -6,11 +6,9 @@
 package GraphTheory.UIComponents;
 
 import GraphTheory.GuiConstants;
+import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
-import java.util.ArrayList;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.control.ScrollPane;
@@ -71,7 +69,13 @@ public class SidebarManager {
                 @Override
                 public void changed(ObservableValue<? extends TreeItem<String>> observable,
                                     TreeItem<String> old_val, TreeItem<String> new_val) {
-                    GraphManager.setCurrentGraph(new_val.getValue());
+                    try{
+                        IntegratedGraphing.getGraphManager().setCurrentGraph(new_val.getValue());
+                    }
+                    catch(Exception ex){
+                        Logger.log("Attempt to change selected graph failed.");
+                        Logger.log(ex.toString());
+                    }
                 }
             }));
         
@@ -102,7 +106,7 @@ public class SidebarManager {
     }
 
     public static void addDetails(){
-        graphDetails = new DetailsSet(GraphManager.get(GraphManager.size() - 1).represents);
+        graphDetails = new DetailsSet(IntegratedGraphing.getGraphManager().get(IntegratedGraphing.getGraphManager().size() - 1).represents);
         detailsContent.getChildren().addAll(graphDetails.getRows());
     }
     
@@ -114,6 +118,18 @@ public class SidebarManager {
     public static void addGraph(GraphEntity e){        
         graphRoot.getChildren().add(e.tag);
         graphsContent.getSelectionModel().select(e.tag);
+    }
+
+    public static void removeGraph(GraphEntity e){
+        graphRoot.getChildren().remove(e.tag);
+        if(graphsContent.getSelectionModel().getSelectedItem().equals(e))
+            try{
+                graphsContent.getSelectionModel().select(0);
+            }
+            catch(IndexOutOfBoundsException ex){
+                Logger.log("Tried to autoselect non-existant graph during deletion.");
+                ex.printStackTrace();
+            }
     }
     
     public static void setSelected(GraphEntity e){

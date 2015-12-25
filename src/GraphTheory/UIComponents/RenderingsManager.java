@@ -8,8 +8,9 @@ package GraphTheory.UIComponents;
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.GuiConstants;
 import GraphTheory.Input.MouseGestures;
+import GraphTheory.Utility.Logger;
+import java.util.Arrays;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -71,6 +72,9 @@ public class RenderingsManager {
     }
     
     public static void removeNode(Node nodeOut){
+//        System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
+        if(!renderings.getChildren().contains(nodeOut))
+            Logger.log("Attempted to remove a non-existant node: " + nodeOut.toString());
         renderings.getChildren().remove(nodeOut);
     }
     

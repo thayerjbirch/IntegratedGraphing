@@ -12,6 +12,7 @@ import GraphTheory.Graphs.GraphObject.GraphCircle;
 import GraphTheory.Graphs.GraphObject.GraphLine;
 import GraphTheory.Graphs.Translatable;
 import static GraphTheory.Input.ToolManager.currentTool;
+import GraphTheory.IntegratedGraphing;
 import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;
@@ -62,7 +63,7 @@ public final class MouseGestures {
                 handlePointerPressed(event, (Translatable) ((GraphLine)event.getSource()).getRepresents());
                 break;
             case DELETE:
-                GraphManager.removeEdge((GraphEdge) ((GraphLine)event.getSource()).getRepresents());
+                IntegratedGraphing.getGraphManager().removeEdge((GraphEdge) ((GraphLine)event.getSource()).getRepresents());
                 break;
         }       
     };
@@ -79,7 +80,7 @@ public final class MouseGestures {
                     Logger.log("Set the starting vertex.");
                 }
                 else{
-                    if(GraphManager.addEdge(RenderingsManager.getSelected(),
+                    if(IntegratedGraphing.getGraphManager().addEdge(RenderingsManager.getSelected(),
                                             (GraphVertex) ((GraphCircle)event.getSource()).getRepresents())){
                         //If the adding the edge succeeds. It will fail if the two vertices are
                         //in distinct Graphs
@@ -88,7 +89,7 @@ public final class MouseGestures {
                 }
                 break;
             case DELETE:
-                GraphManager.removeVertex( (GraphVertex) ((GraphCircle)event.getSource()).getRepresents());
+                IntegratedGraphing.getGraphManager().removeVertex( (GraphVertex) ((GraphCircle)event.getSource()).getRepresents());
                 break;
         }
     };
@@ -120,7 +121,7 @@ public final class MouseGestures {
     static EventHandler<MouseEvent> paneOnMouseClickedEventHandler = (MouseEvent event) -> {
         switch(currentTool){
             case VERTEX:
-                GraphManager.addVertex(event.getX(), event.getY());
+                IntegratedGraphing.getGraphManager().addVertex(event.getX(), event.getY());
                 Logger.log("Vertex added at (" + event.getX() + "," + event.getY() + ").");
                 break;
         }        
@@ -131,11 +132,11 @@ public final class MouseGestures {
         oldY = event.getSceneY();
         RenderingsManager.removeGlow();
         if(t instanceof Graph)
-            GraphManager.setCurrentGraph((Graph)t);
+            IntegratedGraphing.getGraphManager().setCurrentGraph((Graph)t);
         else if(t instanceof GraphVertex)
-            GraphManager.setCurrentGraph(((GraphVertex)t).getParent());
+            IntegratedGraphing.getGraphManager().setCurrentGraph(((GraphVertex)t).getParent());
         else if(t instanceof GraphEdge)
-            GraphManager.setCurrentGraph(((GraphEdge)t).getParent());
+            IntegratedGraphing.getGraphManager().setCurrentGraph(((GraphEdge)t).getParent());
     }
     
     protected static void handlePointerDragged(MouseEvent event, Translatable t){
