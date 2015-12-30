@@ -33,14 +33,14 @@ public class MultiSelectionDialog {
 
        pick1 = new ComboBox();
        pick1.setItems(FXCollections.observableArrayList(graphs));
-       pick1.setValue(IntegratedGraphing.getGraphManager().curGraphEntity.getName());
+       pick1.setValue(IntegratedGraphing.getHQ().getCurrentGraph().getName());
        pick1.setPrefWidth(COMBO_BOX_WIDTH);
        
        pick2 = new ComboBox();
        pick2.setItems(FXCollections.observableArrayList(graphs));
        pick2.setPrefWidth(COMBO_BOX_WIDTH);
        pick2.setValue(graphs.get(0));
-       if(pick2.valueProperty().getValue().equals(IntegratedGraphing.getGraphManager().curGraphEntity.getName())){
+       if(pick2.valueProperty().getValue().equals(IntegratedGraphing.getHQ().getCurrentGraph().getName())){
            pick2.setValue(graphs.get(1));
        }
 

@@ -47,6 +47,10 @@ public class GraphEdge implements GraphObject,Translatable{
         return parent;
     }
 
+    public GraphLine getLine(){
+        return line;
+    }
+
     protected void setParent(Graph g){
         parent = g;
     }

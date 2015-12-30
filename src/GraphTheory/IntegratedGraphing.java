@@ -11,6 +11,7 @@ import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MenuManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
+import GraphTheory.Utility.Headquarters;
 import GraphTheory.Utility.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -27,10 +28,13 @@ import javafx.stage.Stage;
 public class IntegratedGraphing extends Application {
     public static String imageDirectory = null;
     public static String mainDirectory = null;
-    private static GraphManager graphManager;
+    private static Headquarters hq;
     BorderPane root;
     Canvas canvas;
-    ToolManager toolManager;
+    private ToolManager toolManager;
+    private RenderingsManager renderingsManager;
+    private SidebarManager sidebarManager;
+    private GraphManager graphManager;
     
     public static void main(String[] args) {
         launch(args);
@@ -38,8 +42,8 @@ public class IntegratedGraphing extends Application {
  
     @Override
     public void start(Stage primaryStage) throws IOException {
-        //testSetup(primaryStage);
-        setupRoutine(primaryStage);
+        testSetup(primaryStage);
+//        setupRoutine(primaryStage);
     }
     
     private void setupRoutine(Stage primaryStage){
@@ -54,16 +58,18 @@ public class IntegratedGraphing extends Application {
         root = new BorderPane();
         Scene mainScene = new Scene(root,GuiConstants.SCENE_WIDTH,GuiConstants.SCENE_HEIGHT);
         
+        graphManager = new GraphManager();
+        renderingsManager = new RenderingsManager();
+        Graph.setRenderer(renderingsManager);
+        sidebarManager = new SidebarManager();
+
+        hq = new Headquarters(renderingsManager, graphManager, sidebarManager);
+        
         Logger.log("Setting up the layout:");
         createLayout(mainScene,root);
         
         primaryStage.setScene(mainScene);
         primaryStage.show();
-        
-        graphManager = new GraphManager();
-        IntegratedGraphing.getGraphManager().addGraph("K6",Graph.buildKGraph(6));
-        IntegratedGraphing.getGraphManager().addGraph("K4",Graph.buildKGraph(4));
-        SidebarManager.addDetails();
     }
     
     public String findDirectory(String targetDir){
@@ -91,46 +97,25 @@ public class IntegratedGraphing extends Application {
     }
     
     private void testSetup(Stage primaryStage){
-        mainDirectory = findDirectory("img") + File.separator;
-        imageDirectory = mainDirectory + "img" + File.separator;
-        Logger.initialize(new File(mainDirectory), true);
-        Logger.log("Application Started.");
-        Logger.log("The application directory:" + mainDirectory);
-        Logger.log("Image resource directory:" + mainDirectory);
-        
-        primaryStage.setTitle("Rendered Graph Theory");
-        root = new BorderPane();
-        Scene mainScene = new Scene(root,GuiConstants.SCENE_WIDTH,GuiConstants.SCENE_HEIGHT);
-        
-        Logger.log("Setting up the layout:");
-        createLayout(mainScene,root);
-        
-        primaryStage.setScene(mainScene);
-        primaryStage.show();
-        
-        IntegratedGraphing.getGraphManager().addGraph("K6",Graph.buildKGraph(6));
-        IntegratedGraphing.getGraphManager().addGraph("K6",Graph.buildKGraph(6));
-        SidebarManager.addDetails();
-        
-//        System.out.println(IntegratedGraphing.getGraphManager().get(0).toString());
-//        System.out.println(IntegratedGraphing.getGraphManager().get(1).toString());
-//        System.out.println(Graph.isomorphic(IntegratedGraphing.getGraphManager().get(0), IntegratedGraphing.getGraphManager().get(1)));
+        setupRoutine(primaryStage);
+        hq.addGraph("K6", Graph.buildKGraph(6));
+        hq.addGraph("K4", Graph.buildKGraph(4));
     }
     
     private void createLayout(Scene s, BorderPane root){
         Logger.log("Creating the main content pane.",1);
-        root.setCenter(RenderingsManager.setupRenderings());
+        root.setCenter(renderingsManager.getPane());
         
         Logger.log("Creating the menus:",1);
         root.setTop(MenuManager.createMenus(s));
         
         Logger.log("Creating the sidebar:",1);        
-        root.setRight(SidebarManager.setupSidebar());
+        root.setRight(sidebarManager.getGrid());
         
         Logger.log("Layout setup complete.",1);
     }
-    
-    public static GraphManager getGraphManager(){
-        return graphManager;
+
+    public static Headquarters getHQ(){
+        return hq;
     }
 }

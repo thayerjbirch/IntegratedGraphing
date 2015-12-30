@@ -25,19 +25,19 @@ import javafx.scene.layout.VBox;
  * @author Thayer
  */
 public class SidebarManager {
-    private static TitledPane graphsPane;
-    private static BorderPane graphsContentOrganizer;
-    private static ScrollPane graphsContentScroll;
-    private static TreeView graphsContent;
-    private static TreeItem<String> graphRoot;
-    private static TitledPane detailsPane;
-    private static BorderPane detailsContentOrganizer;
-    private static ScrollPane detailsContentScroll;
-    private static VBox detailsContent;
-    private static GridPane grid;
-    private static DetailsSet graphDetails;
+    private TitledPane graphsPane;
+    private final BorderPane graphsContentOrganizer;
+    private final ScrollPane graphsContentScroll;
+    private final TreeView graphsContent;
+    private final TreeItem<String> graphRoot;
+    private TitledPane detailsPane;
+    private final BorderPane detailsContentOrganizer;
+    private final ScrollPane detailsContentScroll;
+    private final VBox detailsContent;
+    private final GridPane grid;
+    private DetailsSet graphDetails;
 
-    public static GridPane setupSidebar(){
+    public SidebarManager(){
         Logger.log("Creating the details pane.", 2);
         detailsPane = new TitledPane();
         detailsPane.setText("Details");
@@ -70,7 +70,7 @@ public class SidebarManager {
                 public void changed(ObservableValue<? extends TreeItem<String>> observable,
                                     TreeItem<String> old_val, TreeItem<String> new_val) {
                     try{
-                        IntegratedGraphing.getGraphManager().setCurrentGraph(new_val.getValue());
+                        IntegratedGraphing.getHQ().setCurrentGraph(new_val.getValue());
                     }
                     catch(Exception ex){
                         Logger.log("Attempt to change selected graph failed.");
@@ -102,25 +102,34 @@ public class SidebarManager {
         grid.add(detailsPane, 0, 2);
         
         Logger.log("Graph pane setup complete.", 2);
+    }
+
+    public GridPane getGrid(){
         return grid;
     }
 
-    public static void addDetails(){
-        graphDetails = new DetailsSet(IntegratedGraphing.getGraphManager().get(IntegratedGraphing.getGraphManager().size() - 1).represents);
+    public void setCurrentGraph(GraphEntity e){
+        setSelected(e);
+        setDetails(e);
+    }
+    
+    public void addDetails(){
+//        graphDetails = new DetailsSet(IntegratedGraphing.getGraphManager().get(IntegratedGraphing.getGraphManager().size() - 1).represents);
+        System.out.println("Go look at SidebarManager.addDetails()");
         detailsContent.getChildren().addAll(graphDetails.getRows());
     }
     
-    public static void setDetails(GraphEntity e){
+    public void setDetails(GraphEntity e){
         if(graphDetails!=null) //prevents an error in initiation, better solution later maybe
             graphDetails.changeTarget(e.represents);
     }
     
-    public static void addGraph(GraphEntity e){        
+    public void addGraph(GraphEntity e){        
         graphRoot.getChildren().add(e.tag);
         graphsContent.getSelectionModel().select(e.tag);
     }
 
-    public static void removeGraph(GraphEntity e){
+    public void removeGraph(GraphEntity e){
         graphRoot.getChildren().remove(e.tag);
         if(graphsContent.getSelectionModel().getSelectedItem().equals(e))
             try{
@@ -132,11 +141,11 @@ public class SidebarManager {
             }
     }
     
-    public static void setSelected(GraphEntity e){
+    public void setSelected(GraphEntity e){
         graphsContent.getSelectionModel().select(e.tag);
     }
     
-    private static final EventHandler<MouseEvent> expandedChecker = (MouseEvent event) -> {
+    private final EventHandler<MouseEvent> expandedChecker = (MouseEvent event) -> {
         if(graphsPane.expandedProperty().get() == false
                 && detailsPane.expandedProperty().get() == false){
             graphsPane.setExpanded(true);

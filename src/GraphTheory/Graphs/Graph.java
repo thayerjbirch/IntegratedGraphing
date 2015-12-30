@@ -65,7 +65,7 @@ public class Graph implements GraphObject, Translatable {
     public SimpleStringProperty orderProperty = new SimpleStringProperty("0");
     public SimpleStringProperty sizeProperty = new SimpleStringProperty("0");
     public SimpleStringProperty densityProperty = new SimpleStringProperty("0");
-    private Object RenderingManager;
+    private static RenderingsManager renderingsManager;
 
     public ArrayList<GraphVertex> getVertexSet() {
         return vertexSet;
@@ -118,7 +118,7 @@ public class Graph implements GraphObject, Translatable {
         circle.setCenterX(x);
         circle.setCenterY(y);
         graphContents.getChildren().add(circle);
-        RenderingsManager.addNode(circle);
+        renderingsManager.addNode(circle);
     }
 
     /**
@@ -137,6 +137,10 @@ public class Graph implements GraphObject, Translatable {
         for (int i = 0; i < order; i++) {
             addVertex(findPoint2D(i * radians));
         }
+    }
+
+    public static void setRenderer(RenderingsManager m){
+        renderingsManager = m;
     }
 
     /**
@@ -173,7 +177,7 @@ public class Graph implements GraphObject, Translatable {
         GraphVertex tempVertex = new GraphVertex(this, x, y);
         MouseGestures.addGestures(tempVertex);
         graphContents.getChildren().add(tempVertex.circle);
-        RenderingsManager.addNode(tempVertex.circle);
+        renderingsManager.addNode(tempVertex.circle);
 
         newVertexSetup(tempVertex);
 
@@ -236,9 +240,15 @@ public class Graph implements GraphObject, Translatable {
     }
 
     public GraphEdge drawEdge(GraphVertex start, GraphVertex end) {
-        GraphEdge e = getEdge(start, end);
-        drawEdge(e);
-        return e;
+        GraphEdge e = findEdge(start, end);
+        if(e == null){
+            e = getEdge(start,end);
+            drawEdge(e);
+            return e;
+        }else{
+            Logger.log("Attempted to add an edge that was already present.");
+            return null;
+        }
     }
 
     public void drawEdge(GraphEdge e) {
@@ -251,7 +261,7 @@ public class Graph implements GraphObject, Translatable {
         e.endNode.addAdjacent(e.startNode);
 
         graphContents.getChildren().add(e.line);
-        RenderingsManager.addNode(e.line);
+        renderingsManager.addNode(e.line);
     }
 
     public boolean deleteEdge(GraphEdge e) {
@@ -268,7 +278,7 @@ public class Graph implements GraphObject, Translatable {
             e.endNode.getAdjacentTo().remove(e.startNode);
             edgeSet.remove(e);
             this.graphContents.getChildren().remove(e.line);
-            RenderingsManager.removeNode(e.line);
+            renderingsManager.removeNode(e.line);
             edgeSetChanged();
             return true;
         }
@@ -324,7 +334,7 @@ public class Graph implements GraphObject, Translatable {
 
     public boolean elementOf(GraphVertex v) {
         for (GraphVertex u : vertexSet) {
-            if (u == v) {
+            if (u == v || u.equals(v)){
                 return true;
             }
         }
@@ -392,17 +402,17 @@ public class Graph implements GraphObject, Translatable {
     public void toFront() {
         for (GraphEdge e : edgeSet) {
             //e.line.toFront();Known issue that toFront() doesn't work
-            RenderingsManager.toFront(e.line);
+            renderingsManager.toFront(e.line);
         }
         for (GraphVertex c : vertexSet) {
             //c.circle.toFront();Known issue that toFront() doesn't work
-            RenderingsManager.toFront(c.circle);
+            renderingsManager.toFront(c.circle);
         }
     }
 
     public void verticesToFront() {
         for (GraphVertex c : vertexSet) {
-            RenderingsManager.toFront(c.circle);
+            renderingsManager.toFront(c.circle);
         }
     }
 
@@ -415,7 +425,7 @@ public class Graph implements GraphObject, Translatable {
                 n.getAdjacentTo().remove(v);
             }
             vertexSet.remove(v);
-            RenderingsManager.removeNode(v.circle);
+            renderingsManager.removeNode(v.circle);
             vertexSetChanged();
             return true;
         }

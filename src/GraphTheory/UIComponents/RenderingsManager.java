@@ -9,6 +9,7 @@ import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.GuiConstants;
 import GraphTheory.Input.MouseGestures;
 import GraphTheory.Utility.Logger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
@@ -20,14 +21,12 @@ import javafx.scene.paint.Color;
  * @author Thayer
  */
 public class RenderingsManager {
-    private static Pane renderings;
-    private static DropShadow borderGlow;
-    private static GraphVertex selectedVertex;
+    private final Pane renderings;
+    private final DropShadow borderGlow;
+    private GraphVertex selectedVertex;
     
     
-    private RenderingsManager(){};
-    
-    public static Pane setupRenderings(){
+    public RenderingsManager(){
         renderings = new Pane();
         renderings.prefHeight(GuiConstants.RENDERINGS_HEIGHT);
         renderings.prefWidth(GuiConstants.RENDERINGS_WIDTH);
@@ -41,11 +40,9 @@ public class RenderingsManager {
 //        borderGlow.setColor(Color.LIGHTGOLDENRODYELLOW);
 //        borderGlow.setWidth(GuiConstants.HIGHLIGHT_BORDER_DEPTH);
 //        borderGlow.setHeight(GuiConstants.HIGHLIGHT_BORDER_DEPTH);
-        
-        return renderings;
     }
     
-    public static void setSelected(GraphVertex nodeIn){
+    public void setSelected(GraphVertex nodeIn){
         if(selectedVertex!=null){
             selectedVertex.circle.setEffect(null);
         }
@@ -56,30 +53,36 @@ public class RenderingsManager {
             selectedVertex = null;
         }
     }
+
+    public Pane getPane(){
+        return renderings;
+    }
     
-    public static GraphVertex getSelected(){
+    public GraphVertex getSelected(){
         return selectedVertex;
     }
     
-    public static void removeGlow(){
+    public void removeGlow(){
         if(selectedVertex!=null)
             selectedVertex.circle.setEffect(null);
         selectedVertex = null;
     }
     
-    public static void addNode(Node nodeIn){
+    public void addNode(Node nodeIn){
         renderings.getChildren().add(nodeIn);
     }
     
-    public static void removeNode(Node nodeOut){
-//        System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
-        if(!renderings.getChildren().contains(nodeOut))
+    public void removeNode(Node nodeOut){
+        if(!renderings.getChildren().contains(nodeOut)){
+            System.out.println(Arrays.toString(Thread.currentThread().getStackTrace()));
             Logger.log("Attempted to remove a non-existant node: " + nodeOut.toString());
+            return;
+        }
         renderings.getChildren().remove(nodeOut);
     }
     
     //The normal toFront method doesnt work correctly(know issue of javafx), this is a workaround
-    public static void toFront(Node node){
+    public void toFront(Node node){
         removeNode(node);
         addNode(node);
     }

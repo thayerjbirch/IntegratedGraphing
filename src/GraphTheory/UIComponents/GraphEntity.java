@@ -11,8 +11,6 @@ import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Input.MouseGestures;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
-import java.util.ArrayList;
-import java.util.BitSet;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -24,12 +22,12 @@ public class GraphEntity{
     Graph represents;
     TreeItem<String> tag;
 
-    GraphEntity(Graph g){
-        this(("Graph " + (IntegratedGraphing.getGraphManager().size() + 1)),g);
+    public GraphEntity(Graph g){
+        this(IntegratedGraphing.getHQ().checkName("Graph"),g);
     }
 
-    GraphEntity(String nameIn, Graph g){
-        name = checkName(nameIn);
+    public GraphEntity(String nameIn, Graph g){
+        name = IntegratedGraphing.getHQ().checkName(nameIn);
         represents = g;
         tag = new TreeItem<>(name);
         
@@ -62,23 +60,8 @@ public class GraphEntity{
         return b.toString();
     }
 
-    public static String checkName(String nameIn){
-        int i = 0;
-        String name = nameIn;
-        if(IntegratedGraphing.getGraphManager().hasGraph(name)){
-            String suffix = " (1)";
-            while(IntegratedGraphing.getGraphManager().hasGraph(name + suffix)){
-                i+=1;
-                suffix = " (" + Integer.toString(i) + ")";
-            }
-            name = nameIn + suffix;
-        }
-        return name;
-    }
-    
     public void addVertex(double x, double y){
         GraphVertex newVertex = represents.addVertex(x, y);
-        RenderingsManager.addNode(newVertex.circle);
     }
     
     public boolean removeVertex(GraphVertex v){
@@ -104,14 +87,13 @@ public class GraphEntity{
     }
     
     public boolean addEdge(GraphVertex u, GraphVertex v){
-        if(represents.elementOf(u) && represents.elementOf(v)){
+        if(represents.elementOf(u) && represents.elementOf(v)){//checks that both of the vertices are in the graph.
             GraphEdge addedEdge = represents.drawEdge(u, v);
-            RenderingsManager.addNode(addedEdge.line);
             represents.verticesToFront();
             Logger.log("Edge added to graph " + name);
             return true;
         }
-        Logger.log("Adding edge failed.");
+        Logger.log("Adding edge failed. Vertices are members or different graphs.");
         return false;
     }
     
