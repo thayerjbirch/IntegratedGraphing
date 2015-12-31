@@ -11,6 +11,7 @@ import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MenuManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
+import GraphTheory.Utility.FileManager;
 import GraphTheory.Utility.Headquarters;
 import GraphTheory.Utility.Logger;
 import java.io.File;
@@ -28,6 +29,8 @@ import javafx.stage.Stage;
 public class IntegratedGraphing extends Application {
     public static String imageDirectory = null;
     public static String mainDirectory = null;
+    public static String dataDirectory = null;
+    private static Stage primaryStage;
     private static Headquarters hq;
     BorderPane root;
     Canvas canvas;
@@ -35,6 +38,7 @@ public class IntegratedGraphing extends Application {
     private RenderingsManager renderingsManager;
     private SidebarManager sidebarManager;
     private GraphManager graphManager;
+    private FileManager fileManager;
     
     public static void main(String[] args) {
         launch(args);
@@ -44,11 +48,17 @@ public class IntegratedGraphing extends Application {
     public void start(Stage primaryStage) throws IOException {
         testSetup(primaryStage);
 //        setupRoutine(primaryStage);
+//        fileManager.loadFromFile();
     }
     
     private void setupRoutine(Stage primaryStage){
+        this.primaryStage = primaryStage;
+
         mainDirectory = findDirectory("img") + File.separator;
         imageDirectory = mainDirectory + "img" + File.separator;
+        dataDirectory = mainDirectory + "dat" + File.separator;
+        FileManager.ensureExists(dataDirectory);
+
         Logger.initialize(new File(mainDirectory), true);
         Logger.log("Application Started.");
         Logger.log("The application directory:" + mainDirectory);
@@ -62,8 +72,9 @@ public class IntegratedGraphing extends Application {
         renderingsManager = new RenderingsManager();
         Graph.setRenderer(renderingsManager);
         sidebarManager = new SidebarManager();
+        fileManager = new FileManager(dataDirectory);
 
-        hq = new Headquarters(renderingsManager, graphManager, sidebarManager);
+        hq = new Headquarters(renderingsManager, graphManager, sidebarManager, fileManager);
         
         Logger.log("Setting up the layout:");
         createLayout(mainScene,root);
@@ -98,8 +109,10 @@ public class IntegratedGraphing extends Application {
     
     private void testSetup(Stage primaryStage){
         setupRoutine(primaryStage);
-        hq.addGraph("K6", Graph.buildKGraph(6));
-        hq.addGraph("K4", Graph.buildKGraph(4));
+        hq.loadFromFile();
+//        hq.addGraph("K6", Graph.buildKGraph(6));
+//        hq.addGraph("K4", Graph.buildKGraph(4));
+//        hq.saveToFile();
     }
     
     private void createLayout(Scene s, BorderPane root){
@@ -117,5 +130,9 @@ public class IntegratedGraphing extends Application {
 
     public static Headquarters getHQ(){
         return hq;
+    }
+
+    public static Stage getPrimaryStage(){
+        return primaryStage;
     }
 }

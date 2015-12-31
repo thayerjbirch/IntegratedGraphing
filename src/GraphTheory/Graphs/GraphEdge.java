@@ -5,7 +5,9 @@
  */
 package GraphTheory.Graphs;
 
+import java.util.ArrayList;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 /**
  *
@@ -91,5 +93,13 @@ public class GraphEdge implements GraphObject,Translatable{
     @Override
     public void translate(double x, double y) {
         parent.translate(x, y);
+    }
+
+    public GraphVertex getStartNode(){
+        return startNode;
+    }
+
+    public GraphVertex getEndNode(){
+        return endNode;
     }
 }

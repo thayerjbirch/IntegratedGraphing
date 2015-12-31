@@ -12,16 +12,13 @@ import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  *

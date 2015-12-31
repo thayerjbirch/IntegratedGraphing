@@ -10,17 +10,21 @@ import GraphTheory.Graphs.GraphEdge;
 import GraphTheory.Graphs.GraphObject.GraphCircle;
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.Translatable;
+import GraphTheory.IntegratedGraphing;
 import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MultiSelectionDialog;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
+import java.io.File;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Pair;
 
 /**
@@ -31,11 +35,14 @@ public class Headquarters {
     RenderingsManager renderingsManager;
     GraphManager graphManager;
     SidebarManager sidebarManager;
+    FileManager fileManager;
     
-    public Headquarters(RenderingsManager r, GraphManager g, SidebarManager s){
+    public Headquarters(RenderingsManager r, GraphManager g, SidebarManager s,
+                        FileManager f){
         renderingsManager = r;
         graphManager = g;
         sidebarManager = s;
+        fileManager = f;
     }
 
     public void setCurrentGraph(GraphEntity e){
@@ -233,5 +240,29 @@ public class Headquarters {
         });
     }
 
-    
+    public void saveToFile(){
+        fileManager.saveToFile(graphManager.getGraphs());
+    }
+
+    public void clear(){
+        Logger.log("Clearing workspace contents.");
+        for(GraphEntity e : graphManager.getGraphs())
+            removeGraph(e);
+    }
+
+    public void loadFromFile(){
+        Logger.log("Attempting to load from file.");
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select your saved file:");
+        fc.setInitialDirectory(new File(IntegratedGraphing.dataDirectory));
+        fc.getExtensionFilters().addAll(
+            new ExtensionFilter("Graph Workspace Files", "*.grph"),
+            new ExtensionFilter("All Files", "*.*"));
+        File target = fc.showOpenDialog(IntegratedGraphing.getPrimaryStage());
+
+        if(target!=null){
+            clear();
+            fileManager.loadFromFile(target.toString());
+        }
+    }
 }

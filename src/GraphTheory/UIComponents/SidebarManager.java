@@ -100,6 +100,8 @@ public class SidebarManager {
         detailsContentOrganizer.prefHeightProperty().bind(grid.heightProperty());
         grid.add(graphsPane, 0, 0);
         grid.add(detailsPane, 0, 2);
+
+        addDetails();
         
         Logger.log("Graph pane setup complete.", 2);
     }
@@ -114,7 +116,7 @@ public class SidebarManager {
     }
     
     public void addDetails(){
-//        graphDetails = new DetailsSet(IntegratedGraphing.getGraphManager().get(IntegratedGraphing.getGraphManager().size() - 1).represents);
+        graphDetails = new DetailsSet();
         System.out.println("Go look at SidebarManager.addDetails()");
         detailsContent.getChildren().addAll(graphDetails.getRows());
     }

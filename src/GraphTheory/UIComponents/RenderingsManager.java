@@ -9,7 +9,6 @@ import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.GuiConstants;
 import GraphTheory.Input.MouseGestures;
 import GraphTheory.Utility.Logger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
