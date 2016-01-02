@@ -10,6 +10,7 @@ import GraphTheory.GuiConstants;
 import GraphTheory.Input.MouseGestures;
 import GraphTheory.Utility.Logger;
 import java.util.Arrays;
+import java.util.Collection;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -69,6 +70,10 @@ public class RenderingsManager {
     
     public void addNode(Node nodeIn){
         renderings.getChildren().add(nodeIn);
+    }
+
+    public void removeAll(Collection<Node> nodes){
+        renderings.getChildren().removeAll(nodes);
     }
     
     public void removeNode(Node nodeOut){

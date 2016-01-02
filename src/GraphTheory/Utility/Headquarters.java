@@ -17,9 +17,11 @@ import GraphTheory.UIComponents.MultiSelectionDialog;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
@@ -108,7 +110,9 @@ public class Headquarters {
     }
 
     public void removeGraph(GraphEntity e){
+        Logger.log("Removing graph: " + e.getName());
         renderingsManager.removeNode(e.getGraph().getCircle());
+        renderingsManager.removeAll(e.getGraph().getContents());
         graphManager.removeGraph(e);
         sidebarManager.removeGraph(e);
     }
@@ -122,6 +126,8 @@ public class Headquarters {
             Logger.log("Set the starting vertex.");
         }
         else{
+            if(srcVertex.equals(renderingsManager.getSelected()))
+                return;
             if(graphManager.addEdge(renderingsManager.getSelected(),srcVertex)){
                 //If the adding the edge succeeds. It will fail if the two vertices are
                 //in distinct Graphs
@@ -244,10 +250,26 @@ public class Headquarters {
         fileManager.saveToFile(graphManager.getGraphs());
     }
 
+    public void saveAsToFile(){
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save file as:");
+        fc.setInitialDirectory(new File(IntegratedGraphing.dataDirectory));
+        fc.getExtensionFilters().addAll(
+            new ExtensionFilter("Graph Workspace Files", "*.grph"),
+            new ExtensionFilter("All Files", "*.*"));
+        File newSave = fc.showSaveDialog(IntegratedGraphing.getPrimaryStage());
+
+        fileManager.saveToFile(newSave, graphManager.getGraphs());
+    }
+
     public void clear(){
         Logger.log("Clearing workspace contents.");
-        for(GraphEntity e : graphManager.getGraphs())
-            removeGraph(e);
+        Logger.log(Integer.toString(graphManager.getGraphs().size()));
+        Iterator<GraphEntity> iter = graphManager.getGraphs().iterator();
+        while(iter.hasNext()){ //enhanced for loop was throwing concurrent modification errors
+            removeGraph(iter.next());
+        }
+        Logger.log("Finished clearing workspace contents.");
     }
 
     public void loadFromFile(){
@@ -264,5 +286,19 @@ public class Headquarters {
             clear();
             fileManager.loadFromFile(target.toString());
         }
+    }
+
+    public void newWorkspace(){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("New Workspace");
+        alert.setHeaderText("Clear work and create a new workspace.");
+        alert.setContentText("Are you sure you want to clear your work? Unsaved" + 
+                             " changes will be discarded.");
+        Optional<ButtonType> response = alert.showAndWait();
+
+        response.ifPresent((ButtonType bt) -> {
+            if(bt == ButtonType.OK)
+                clear();
+        });
     }
 }

@@ -9,23 +9,16 @@ import GraphTheory.Graphs.Graph;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
-import java.util.Optional;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Pair;
 
 /**
  *
@@ -60,6 +53,11 @@ public class MenuManager {
     }
 
     private static void setupMenu(Menu addTo){
+        MenuItem menuNewWorkspace = new MenuItem("New Workspace");
+                 menuNewWorkspace.setOnAction((ActionEvent t) -> {
+                     IntegratedGraphing.getHQ().newWorkspace();
+                 });
+        
         Menu menuNewGraph = new Menu("New Graph");
             
         MenuItem menuNewGraphEmpty = new MenuItem("Empty Graph");
@@ -73,6 +71,12 @@ public class MenuManager {
                  menuNewGraphK.setOnAction((ActionEvent t) -> {
                     IntegratedGraphing.getHQ().addKGraph();
                  });
+
+        MenuItem menuSaveButton = new MenuItem("Save");
+                 menuSaveButton.setAccelerator(KeyCombination.keyCombination("Ctrl+s"));
+                 menuSaveButton.setOnAction((ActionEvent t) -> {
+                     IntegratedGraphing.getHQ().saveAsToFile();
+                 });
                  
         MenuItem menuExitButton = new MenuItem("Exit");
         menuExitButton.setAccelerator(KeyCombination.keyCombination("Ctrl+X"));
@@ -81,7 +85,8 @@ public class MenuManager {
         });
 
         menuNewGraph.getItems().addAll(menuNewGraphEmpty,menuNewGraphK);
-        addTo.getItems().addAll(menuNewGraph, menuExitButton);
+        addTo.getItems().addAll(menuNewWorkspace, menuNewGraph, menuSaveButton,
+                                menuExitButton);
     }
 
     private static void setupGraphs(Menu addTo){

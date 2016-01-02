@@ -117,7 +117,6 @@ public class SidebarManager {
     
     public void addDetails(){
         graphDetails = new DetailsSet();
-        System.out.println("Go look at SidebarManager.addDetails()");
         detailsContent.getChildren().addAll(graphDetails.getRows());
     }
     
@@ -132,8 +131,9 @@ public class SidebarManager {
     }
 
     public void removeGraph(GraphEntity e){
+        Logger.log("Removing the graph's tag from the sidebar.",1);
         graphRoot.getChildren().remove(e.tag);
-        if(graphsContent.getSelectionModel().getSelectedItem().equals(e))
+        if(graphsContent.getSelectionModel().getSelectedItem() == e.tag)
             try{
                 graphsContent.getSelectionModel().select(0);
             }

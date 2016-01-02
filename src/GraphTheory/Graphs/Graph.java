@@ -53,7 +53,7 @@ public class Graph implements GraphObject, Translatable {
     protected double centerY;
     protected double defaultRadius = 100;
     public GraphCircle circle;
-    public Pane graphContents = new Pane();
+    public ArrayList<Node> graphContents = new ArrayList<>();
     private ArrayList<GraphVertex> vertexSet = new ArrayList();
     private ArrayList<GraphEdge> edgeSet = new ArrayList();
     private ArrayList<GraphEdge> edges = new ArrayList();
@@ -114,7 +114,7 @@ public class Graph implements GraphObject, Translatable {
         circle.setFill(Color.GRAY);
         circle.setCenterX(x);
         circle.setCenterY(y);
-        graphContents.getChildren().add(circle);
+        graphContents.add(circle);
         renderingsManager.addNode(circle);
     }
 
@@ -173,7 +173,7 @@ public class Graph implements GraphObject, Translatable {
     public GraphVertex addVertex(double x, double y) {
         GraphVertex tempVertex = new GraphVertex(this, x, y);
         MouseGestures.addGestures(tempVertex);
-        graphContents.getChildren().add(tempVertex.circle);
+        graphContents.add(tempVertex.circle);
         renderingsManager.addNode(tempVertex.circle);
 
         newVertexSetup(tempVertex);
@@ -257,7 +257,7 @@ public class Graph implements GraphObject, Translatable {
         e.startNode.addAdjacent(e.endNode);
         e.endNode.addAdjacent(e.startNode);
 
-        graphContents.getChildren().add(e.line);
+        graphContents.add(e.line);
         renderingsManager.addNode(e.line);
     }
 
@@ -274,7 +274,7 @@ public class Graph implements GraphObject, Translatable {
             e.startNode.getAdjacentTo().remove(e.endNode);
             e.endNode.getAdjacentTo().remove(e.startNode);
             edgeSet.remove(e);
-            this.graphContents.getChildren().remove(e.line);
+            graphContents.remove(e.line);
             renderingsManager.removeNode(e.line);
             edgeSetChanged();
             return true;
@@ -345,6 +345,10 @@ public class Graph implements GraphObject, Translatable {
             }
         }
         return false;
+    }
+
+    public ArrayList<Node> getContents(){
+        return graphContents;
     }
 
     public GraphEdge getEdge(GraphVertex u, GraphVertex v){

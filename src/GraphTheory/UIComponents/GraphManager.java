@@ -89,10 +89,12 @@ public class GraphManager {
     }
 
     public void removeGraph(GraphEntity e){
-        e.tag.getParent().getChildren().remove(e.tag);
-
         graphsList.remove(e);
         graphsMap.remove(e.name);
+        
+        if(graphsList.isEmpty()){
+            IntegratedGraphing.getHQ();
+        }
     }
     
     public boolean hasGraph(String name){

@@ -28,9 +28,11 @@ public class FileManager {
     }
 
     public void saveToFile(String fileOut, ArrayList<GraphEntity> graphs){
-        Thread t = new Thread(() -> {
-            File destFile = new File(dir + fileOut);
+        saveToFile(new File(dir+fileOut), graphs);
+    }
 
+    public void saveToFile(File destFile, ArrayList<GraphEntity> graphs){
+        Thread t = new Thread(() -> {
             try {
                 if(!destFile.exists())
                     destFile.createNewFile();
@@ -43,7 +45,7 @@ public class FileManager {
                 GraphList gl = new GraphList(graphs);
                 out.writeObject(gl);
                 out.close();
-                Logger.log("Workspace saved to " + fileOut);
+                Logger.log("Workspace saved to " + destFile.toString());
             } catch (IOException ex) {
                 Logger.log(ex.toString());
             }
