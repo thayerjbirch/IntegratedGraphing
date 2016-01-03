@@ -231,6 +231,7 @@ public class Graph implements GraphObject, Translatable {
      *
      * @param start
      * @param end
+     * @return 
      */
     public GraphEdge addEdge(GraphVertex start, GraphVertex end) {
         return addEdge(start, end, Color.BLACK);
@@ -351,15 +352,36 @@ public class Graph implements GraphObject, Translatable {
         return graphContents;
     }
 
+    /**
+     * This function returns the GraphEdge object if both ends of that
+     * edge are vertices in the vertex set of this graph.
+     * @param u
+     * @param v
+     * @return
+     */
     public GraphEdge getEdge(GraphVertex u, GraphVertex v){
         return getEdge(new GraphEdge(this,u,v));
     }
     
+    /**
+     *
+     * @param u
+     * @param v
+     * @return
+     */
     public GraphEdge findEdge(GraphVertex u, GraphVertex v) {
+        if(u == null || v == null)
+            return null;
         GraphEdge tempEdge = new GraphEdge(this, u, v);
         return findEdge(tempEdge);
     }
 
+    /**
+     * This function returns the GraphEdge object if both ends of that
+     * edge are vertices in the vertex set of this graph.
+     * @param e
+     * @return
+     */
     public GraphEdge getEdge(GraphEdge e) {
         for (GraphEdge n : edges) {
             if (n.equals(e)) {

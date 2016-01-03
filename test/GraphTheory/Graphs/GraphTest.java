@@ -7,6 +7,7 @@ package GraphTheory.Graphs;
 
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.Graph;
+import GraphTheory.UIComponents.RenderingsManager;
 import java.util.ArrayList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -22,16 +23,31 @@ import static org.junit.Assert.*;
  * @author Thayer
  */
 public class GraphTest {
-    
+    Graph testSubject;
+
     public GraphTest() {
+        testSubject = new Graph();
+        for(int i = 0; i < 10; i++)
+            testSubject.addVertex(new GraphVertex(testSubject, 0, 0));
+
+        testSubject.drawEdge(testSubject.getVertexSet().get(4),
+                            testSubject.getVertexSet().get(5));
+        testSubject.drawEdge(testSubject.getVertexSet().get(3),
+                            testSubject.getVertexSet().get(5));
+        testSubject.drawEdge(testSubject.getVertexSet().get(2),
+                            testSubject.getVertexSet().get(5));
+        testSubject.drawEdge(testSubject.getVertexSet().get(1),
+                            testSubject.getVertexSet().get(5));
     }
     
     @BeforeClass
     public static void setUpClass() {
+        Graph.setRenderer(new RenderingsManager());
     }
     
     @AfterClass
     public static void tearDownClass() {
+        Graph.setRenderer(null);
     }
     
     @Before
@@ -116,7 +132,7 @@ public class GraphTest {
         System.out.println("findPoint2D");
         double rad = 0;
         Graph instance = new Graph(0,0);
-        Point2D expResult = new Point2D(50,0);
+        Point2D expResult = new Point2D(100,0);
         Point2D result = instance.findPoint2D(rad);
         assertEquals(expResult, result);
     }
@@ -127,12 +143,7 @@ public class GraphTest {
     @Test
     public void testGetVertexSet() {
         System.out.println("getVertexSet");
-        Graph instance = new Graph();
-        ArrayList<GraphVertex> expResult = null;
-        ArrayList<GraphVertex> result = instance.getVertexSet();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, testSubject.getVertexSet() instanceof ArrayList);
     }
 
     /**
@@ -141,26 +152,7 @@ public class GraphTest {
     @Test
     public void testGetEdgeSet() {
         System.out.println("getEdgeSet");
-        Graph instance = new Graph();
-        ArrayList<GraphEdge> expResult = null;
-        ArrayList<GraphEdge> result = instance.getEdgeSet();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getEdges method, of class Graph.
-     */
-    @Test
-    public void testGetEdges() {
-        System.out.println("getEdges");
-        Graph instance = new Graph();
-        ArrayList<GraphEdge> expResult = null;
-        ArrayList<GraphEdge> result = instance.getEdgeList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, testSubject.getEdgeSet() instanceof ArrayList);
     }
 
     /**
@@ -169,12 +161,7 @@ public class GraphTest {
     @Test
     public void testGetDefaultRadius() {
         System.out.println("getDefaultRadius");
-        Graph instance = new Graph();
-        double expResult = 0.0;
-        double result = instance.getDefaultRadius();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, testSubject.getDefaultRadius() > 0);
     }
 
     /**
@@ -183,10 +170,7 @@ public class GraphTest {
     @Test
     public void testReorderVertexs_0args() {
         System.out.println("reorderVertexs");
-        Graph instance = new Graph();
-        instance.reorderVertexs();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testSubject.reorderVertexs();
     }
 
     /**
@@ -195,11 +179,9 @@ public class GraphTest {
     @Test
     public void testReorderVertexs_double() {
         System.out.println("reorderVertexs");
-        double radius = 0.0;
-        Graph instance = new Graph();
-        instance.reorderVertexs(radius);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testSubject.reorderVertexs(0);
+        testSubject.reorderVertexs(1000);
+        testSubject.reorderVertexs(-10);
     }
 
     /**
@@ -210,12 +192,10 @@ public class GraphTest {
         System.out.println("buildKGraph");
         double x = 0.0;
         double y = 0.0;
-        int order = 0;
-        Graph expResult = null;
-        Graph result = Graph.buildKGraph(x, y, order);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int order = 6;
+        Graph graph = Graph.buildKGraph(x, y, order);
+        assertEquals(6, graph.order());
+        assertEquals(15, graph.size());
     }
 
     /**
@@ -224,12 +204,10 @@ public class GraphTest {
     @Test
     public void testBuildKGraph_int() {
         System.out.println("buildKGraph");
-        int order = 0;
-        Graph expResult = null;
-        Graph result = Graph.buildKGraph(order);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int order = 7;
+        Graph graph = Graph.buildKGraph(order);
+        assertEquals(7, graph.order());
+        assertEquals(21, graph.size());
     }
 
     /**
@@ -240,28 +218,23 @@ public class GraphTest {
         System.out.println("addVertex");
         double x = 0.0;
         double y = 0.0;
-        Graph instance = new Graph();
-        GraphVertex expResult = null;
-        GraphVertex result = instance.addVertex(x, y);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int order = testSubject.order();
+        testSubject.addVertex(x, y);
+        assertEquals(order+1, testSubject.order());
     }
 
     /**
      * Test of drawEdge method, of class Graph.
+     * This method is a convenience method, and as such the tests
+     * are covering invalid input
      */
     @Test
     public void testDrawEdge_GraphVertex_GraphVertex() {
         System.out.println("drawEdge");
-        GraphVertex start = null;
-        GraphVertex end = null;
-        Graph instance = new Graph();
-        GraphEdge expResult = null;
-        GraphEdge result = instance.drawEdge(start, end);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GraphVertex start = testSubject.getVertexSet().get(4);
+        GraphVertex end = testSubject.getVertexSet().get(5);
+
+        assertEquals(null, testSubject.drawEdge(start, end));
     }
 
     /**
@@ -270,11 +243,12 @@ public class GraphTest {
     @Test
     public void testDrawEdge_GraphEdge() {
         System.out.println("drawEdge");
-        GraphEdge e = null;
-        Graph instance = new Graph();
-        instance.drawEdge(e);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GraphEdge e = testSubject.getEdge(testSubject.getVertexSet().get(0),
+                                          testSubject.getVertexSet().get(8));
+        int size = testSubject.size();
+        testSubject.drawEdge(e);
+
+        assertEquals(size + 1, testSubject.size());
     }
 
     /**
@@ -283,13 +257,12 @@ public class GraphTest {
     @Test
     public void testDeleteEdge() {
         System.out.println("deleteEdge");
-        GraphEdge e = null;
-        Graph instance = new Graph();
-        boolean expResult = false;
-        boolean result = instance.deleteEdge(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GraphEdge e = testSubject.getEdgeSet().get(0);
+        int edgeSetSize = testSubject.getEdgeSet().size();
+        int edgeListSize = testSubject.getEdgeList().size();//number of edges in K graph of that order
+        assertEquals(true, testSubject.deleteEdge(e));
+        assertEquals(edgeSetSize - 1, testSubject.getEdgeSet().size());
+        assertEquals(edgeListSize -1, testSubject.getEdgeList().size());
     }
 
     /**
@@ -300,11 +273,23 @@ public class GraphTest {
         System.out.println("removeEdge");
         GraphEdge e = null;
         Graph instance = new Graph();
+        instance.addVertex(new GraphVertex(instance,0,0));
+        instance.addVertex(new GraphVertex(instance,0,0));
+        instance.drawEdge(instance.getVertexSet().get(0),
+                         instance.getVertexSet().get(1));
+        
         boolean expResult = false;
         boolean result = instance.removeEdge(e);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        //removing an edge from a different graph
+        expResult = false;
+        result = testSubject.removeEdge(instance.getEdgeSet().get(0));
+        assertEquals(expResult,result);
+
+        expResult = true;
+        result = testSubject.removeEdge(testSubject.getEdgeSet().get(0));
+        assertEquals(expResult,result);
     }
 
     /**
@@ -317,8 +302,6 @@ public class GraphTest {
         int expResult = 0;
         int result = instance.order();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -331,8 +314,6 @@ public class GraphTest {
         int expResult = 0;
         int result = instance.size();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -341,12 +322,14 @@ public class GraphTest {
     @Test
     public void testMaxEdges_int() {
         System.out.println("maxEdges");
-        int order = 0;
-        int expResult = 0;
+        int order = 4;
+        int expResult = 6;
         int result = Graph.maxEdges(order);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        order = 6;
+        expResult = 15;
+        assertEquals(expResult, Graph.maxEdges(6));
     }
 
     /**
@@ -355,12 +338,14 @@ public class GraphTest {
     @Test
     public void testMaxEdges_Graph() {
         System.out.println("maxEdges");
-        Graph g = null;
-        int expResult = 0;
+        Graph g = Graph.buildKGraph(4);
+        int expResult = 6;
         int result = Graph.maxEdges(g);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        g = Graph.buildKGraph(6);
+        expResult = 15;
+        assertEquals(expResult, Graph.maxEdges(g));
     }
 
     /**
@@ -369,10 +354,11 @@ public class GraphTest {
     @Test
     public void testComplement() {
         System.out.println("complement");
-        Graph instance = new Graph();
-        instance.complement();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Graph graph = Graph.buildKGraph(6);
+        graph.complement();
+        assertEquals(0,graph.size());
+        graph.complement();
+        assertEquals(15,graph.size());
     }
 
     /**
@@ -381,13 +367,11 @@ public class GraphTest {
     @Test
     public void testElementOf_GraphVertex() {
         System.out.println("elementOf");
-        GraphVertex v = null;
         Graph instance = new Graph();
-        boolean expResult = false;
-        boolean result = instance.elementOf(v);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GraphVertex v = new GraphVertex(instance, 0 ,0);
+        assertEquals(false, testSubject.elementOf(v));
+        
+        assertEquals(true, testSubject.getVertexSet().get(0) instanceof GraphVertex);
     }
 
     /**
@@ -401,8 +385,8 @@ public class GraphTest {
         boolean expResult = false;
         boolean result = instance.elementOf(e);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        assertEquals(true, testSubject.elementOf(testSubject.getEdgeSet().get(0)));
     }
 
     /**
@@ -417,8 +401,9 @@ public class GraphTest {
         GraphEdge expResult = null;
         GraphEdge result = instance.findEdge(u, v);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        assertEquals(false, null != testSubject.findEdge(
+                testSubject.getVertexSet().get(0), testSubject.getVertexSet().get(1)));
     }
 
     /**
@@ -427,13 +412,9 @@ public class GraphTest {
     @Test
     public void testFindEdge_GraphEdge() {
         System.out.println("findEdge");
-        GraphEdge e = null;
-        Graph instance = new Graph();
-        GraphEdge expResult = null;
-        GraphEdge result = instance.findEdge(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(null, testSubject.findEdge(null));
+        assertEquals(true, testSubject.findEdge(testSubject.getEdgeSet().get(0))
+                            instanceof GraphEdge);
     }
 
     /**
@@ -444,8 +425,6 @@ public class GraphTest {
         System.out.println("recenterCircle");
         Graph instance = new Graph();
         instance.recenterCircle();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -454,12 +433,10 @@ public class GraphTest {
     @Test
     public void testTranslate() {
         System.out.println("translate");
-        double x = 0.0;
-        double y = 0.0;
+        double x = 20.0;
+        double y = 10.0;
         Graph instance = new Graph();
         instance.translate(x, y);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -468,10 +445,7 @@ public class GraphTest {
     @Test
     public void testToFront() {
         System.out.println("toFront");
-        Graph instance = new Graph();
-        instance.toFront();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testSubject.toFront();
     }
 
     /**
@@ -480,10 +454,7 @@ public class GraphTest {
     @Test
     public void testVerticesToFront() {
         System.out.println("verticesToFront");
-        Graph instance = new Graph();
-        instance.verticesToFront();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testSubject.verticesToFront();
     }
 
     /**
@@ -492,37 +463,34 @@ public class GraphTest {
     @Test
     public void testRemoveVertex() {
         System.out.println("removeVertex");
-        GraphVertex v = null;
         Graph instance = new Graph();
-        boolean expResult = false;
-        boolean result = instance.removeVertex(v);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GraphVertex v = new GraphVertex(instance,0,0);
+        instance.addVertex(v);
+        int order = instance.order();
+        instance.removeVertex(v);
+        assertEquals(order - 1, instance.order());
     }
 
     /**
      * Test of vertexSetChanged method, of class Graph.
+     * Collection of units of work to be done together.
+     * This is just a high level test for errors.
      */
     @Test
     public void testVertexSetChanged() {
         System.out.println("vertexSetChanged");
-        Graph instance = new Graph();
-        instance.vertexSetChanged();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testSubject.vertexSetChanged();
     }
 
     /**
      * Test of edgeSetChanged method, of class Graph.
+     * Collection of units of work to be done together.
+     * This is just a high level test for errors.
      */
     @Test
     public void testEdgeSetChanged() {
         System.out.println("edgeSetChanged");
-        Graph instance = new Graph();
-        instance.edgeSetChanged();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        testSubject.edgeSetChanged();
     }
 
     /**
@@ -531,12 +499,9 @@ public class GraphTest {
     @Test
     public void testGetDegreeSequence() {
         System.out.println("getDegreeSequence");
-        Graph instance = new Graph();
-        int[] expResult = null;
-        int[] result = instance.getDegreeSequence();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int length = testSubject.order();
+        int[] degSeq = testSubject.getDegreeSequence();
+        assertEquals(length, degSeq.length);
     }
     
 }
