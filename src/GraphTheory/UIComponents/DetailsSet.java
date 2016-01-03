@@ -48,6 +48,12 @@ public class DetailsSet {
        dets.get(2).setProperty(g.densityProperty);
     }
 
+    public final void setEmpty(){
+        for(DetailsRow d : dets){
+            d.setProperty(defaultText);
+        }
+    }
+
     public ArrayList<Node> getRows(){
         ArrayList<Node> ret = new ArrayList<>();
         for(DetailsRow r : dets)

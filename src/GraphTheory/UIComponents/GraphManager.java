@@ -88,13 +88,19 @@ public class GraphManager {
         return e.getParent().removeEdge(e);
     }
 
+    public void clear(){
+        curGraphEntity = null;
+        graphsList.clear();
+        graphsMap.clear();
+    }
+
     public void removeGraph(GraphEntity e){
         graphsList.remove(e);
         graphsMap.remove(e.name);
         
-        if(graphsList.isEmpty()){
-            IntegratedGraphing.getHQ();
-        }
+//        if(graphsList.isEmpty()){
+//            IntegratedGraphing.getHQ();
+//        }
     }
     
     public boolean hasGraph(String name){

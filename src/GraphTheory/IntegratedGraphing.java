@@ -52,7 +52,7 @@ public class IntegratedGraphing extends Application {
     }
     
     private void setupRoutine(Stage primaryStage){
-        this.primaryStage = primaryStage;
+        IntegratedGraphing.primaryStage = primaryStage;
 
         mainDirectory = findDirectory("img") + File.separator;
         imageDirectory = mainDirectory + "img" + File.separator;

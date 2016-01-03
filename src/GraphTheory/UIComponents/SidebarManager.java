@@ -144,6 +144,10 @@ public class SidebarManager {
     }
     
     public void setSelected(GraphEntity e){
+        if(e == null){
+            graphsContent.getSelectionModel().clearSelection();
+            return;
+        }
         graphsContent.getSelectionModel().select(e.tag);
     }
     
@@ -154,4 +158,10 @@ public class SidebarManager {
             detailsPane.setExpanded(true);
         }
     };
+
+    public void clear(){
+        graphRoot.getChildren().clear();
+        graphDetails.setEmpty();
+        setSelected(null);
+    }
 }

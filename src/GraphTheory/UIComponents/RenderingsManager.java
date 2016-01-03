@@ -54,6 +54,11 @@ public class RenderingsManager {
         }
     }
 
+    public void clear(){
+        setSelected(null);
+        renderings.getChildren().clear();
+    }
+
     public Pane getPane(){
         return renderings;
     }

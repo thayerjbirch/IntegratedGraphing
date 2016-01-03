@@ -113,8 +113,8 @@ public class Headquarters {
         Logger.log("Removing graph: " + e.getName());
         renderingsManager.removeNode(e.getGraph().getCircle());
         renderingsManager.removeAll(e.getGraph().getContents());
-        graphManager.removeGraph(e);
         sidebarManager.removeGraph(e);
+        graphManager.removeGraph(e);
     }
 
     public void edgeAddToolAction(MouseEvent event){
@@ -180,7 +180,9 @@ public class Headquarters {
 
         Optional<String> result = selectionDialog.showAndWait();
         result.ifPresent((String target) -> {
-            graphManager.get(target).getGraph().complement();
+            Graph g = graphManager.get(target).getGraph();
+            g.complement();
+            g.verticesToFront();
         });
     }
 
@@ -264,11 +266,19 @@ public class Headquarters {
 
     public void clear(){
         Logger.log("Clearing workspace contents.");
-        Logger.log(Integer.toString(graphManager.getGraphs().size()));
-        Iterator<GraphEntity> iter = graphManager.getGraphs().iterator();
-        while(iter.hasNext()){ //enhanced for loop was throwing concurrent modification errors
-            removeGraph(iter.next());
-        }
+//        Logger.log(Integer.toString(graphManager.getGraphs().size()));
+//        Iterator<GraphEntity> iter = graphManager.getGraphs().iterator();
+////        while(iter.hasNext()){ //enhanced for loop was throwing concurrent modification errors
+//        for(int i = 0; i < graphManager.getGraphs().size(); i++){
+////            removeGraph(iter.next());
+////            System.out.println(iter.hasNext());
+//            System.out.println(i);
+//            removeGraph(graphManager.getGraphs().get(graphManager.getGraphs().size() - 1));
+//            System.out.println(graphManager.getGraphs().size());
+//        }
+        renderingsManager.clear();
+        graphManager.clear();
+        sidebarManager.clear();
         Logger.log("Finished clearing workspace contents.");
     }
 
