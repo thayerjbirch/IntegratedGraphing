@@ -6,6 +6,7 @@
 package GraphTheory;
 
 import GraphTheory.Graphs.Graph;
+import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MenuManager;
@@ -16,6 +17,8 @@ import GraphTheory.Utility.Headquarters;
 import GraphTheory.Utility.Logger;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -109,7 +112,36 @@ public class IntegratedGraphing extends Application {
     
     private void testSetup(Stage primaryStage){
         setupRoutine(primaryStage);
-        hq.loadFromFile();
+        Graph triangles = new Graph(6);
+        ArrayList<GraphVertex> triVSet = triangles.getVertexSet();
+        Graph hexagon = new Graph(6);
+        ArrayList<GraphVertex> hexVSet = hexagon.getVertexSet();
+
+        triangles.drawEdge(triVSet.get(0), triVSet.get(1));
+        triangles.drawEdge(triVSet.get(1), triVSet.get(2));
+        triangles.drawEdge(triVSet.get(2), triVSet.get(0));
+
+        triangles.drawEdge(triVSet.get(3), triVSet.get(4));
+        triangles.drawEdge(triVSet.get(4), triVSet.get(5));
+        triangles.drawEdge(triVSet.get(5), triVSet.get(3));
+
+        hexagon.drawEdge(hexVSet.get(0), hexVSet.get(1));
+        hexagon.drawEdge(hexVSet.get(1), hexVSet.get(2));
+        hexagon.drawEdge(hexVSet.get(2), hexVSet.get(3));
+        hexagon.drawEdge(hexVSet.get(3), hexVSet.get(4));
+        hexagon.drawEdge(hexVSet.get(4), hexVSet.get(5));
+        hexagon.drawEdge(hexVSet.get(5), hexVSet.get(0));
+
+        int[][] triAdj = triangles.getAdjacencyMatrix();
+        for(int i = 0; i < triAdj.length; i++)
+            System.out.println(Arrays.toString(triAdj[i]));
+
+        System.out.println("\n");
+
+        int[][] hexAdj = triangles.getAdjacencyMatrix();
+        for(int i = 0; i < triAdj.length; i++)
+            System.out.println(Arrays.toString(hexAdj[i]));
+//        hq.loadFromFile();
 //        hq.addGraph("K6", Graph.buildKGraph(6));
 //        hq.addGraph("K4", Graph.buildKGraph(4));
 //        hq.saveToFile();

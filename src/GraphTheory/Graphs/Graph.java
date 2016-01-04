@@ -403,7 +403,12 @@ public class Graph implements GraphObject, Translatable {
     }
 
     //Sets the center handle to the average coordinates among all vertices
-    public void recenterCircle() {
+
+    /**
+     * Averages the coordinates of all the vertices and places the
+     * anchor circle of the graph at that position.
+     */
+        public void recenterCircle() {
         double newSumX = 0, newSumY = 0;
         int divisor = vertexSet.size();
         for (GraphVertex v : vertexSet) {
@@ -414,6 +419,11 @@ public class Graph implements GraphObject, Translatable {
         circle.setCenterY(newSumY / divisor);
     }
 
+    /**
+     * Moves the rendering of the graph by (x,y)
+     * @param x
+     * @param y
+     */
     @Override
     public void translate(double x, double y) {
         circle.translate(x, y);
@@ -422,6 +432,10 @@ public class Graph implements GraphObject, Translatable {
         }
     }
 
+    /**
+     * Moves all objects in the graph to the front of the rendering
+     * pane, this makes them easier to click on.
+     */
     public void toFront() {
         for (GraphEdge e : edgeSet) {
             //e.line.toFront();Known issue that toFront() doesn't work
@@ -433,12 +447,21 @@ public class Graph implements GraphObject, Translatable {
         }
     }
 
+    /**
+     * Moves the vertices to the front of the rendering pane,
+     * this is to make them easier to click on.
+     */
     public void verticesToFront() {
         for (GraphVertex c : vertexSet) {
             renderingsManager.toFront(c.circle);
         }
     }
 
+    /**
+     * Removes a vertex from the graph.
+     * @param v
+     * @return True if a vertex was removed
+     */
     public boolean removeVertex(GraphVertex v) {
         if (elementOf(v)) {
             for (GraphEdge e : v.getEdges()) {
@@ -455,6 +478,9 @@ public class Graph implements GraphObject, Translatable {
         return false;
     }
 
+    /**
+     * Updates any properties affected by changing the vertex set.
+     */
     public void vertexSetChanged() {
         recenterCircle();
 
@@ -462,11 +488,18 @@ public class Graph implements GraphObject, Translatable {
         densityProperty.set(String.format("%.3f", (double) edgeSet.size() / (double) edges.size()));
     }
 
+    /**
+     * Updates any properties affected by changing the edge set.
+     */
     public void edgeSetChanged() {
         sizeProperty.set(Integer.toString(edgeSet.size()));
         densityProperty.set(String.format("%.3f", (double) edgeSet.size() / (double) edges.size()));
     }
 
+    /**
+     * Returns an array of integers representing the degree of each vertex
+     * @return int[]
+     */
     public int[] getDegreeSequence() {
         int[] degSeq = new int[vertexSet.size()];
         for (int i = 0; i < vertexSet.size(); i++) {
@@ -476,6 +509,12 @@ public class Graph implements GraphObject, Translatable {
         return degSeq;
     }
 
+    /**
+     * Returns an int[order][order] matrix where a value
+     * at [u][v] is the length of the edge between vertices
+     * u and v or 0 if they are non-adjacent
+     * @return int[][]
+     */
     public int[][] getAdjacencyMatrix(){
         int size = vertexSet.size();
         int[][] adj = new int[size][size];//default initialized to zero
@@ -492,7 +531,16 @@ public class Graph implements GraphObject, Translatable {
         return adj;
     }
 
+    /**
+     * Convenience method for isomorphic(Graph,Graph)
+     * Returns true if the two graphs are isomorphic
+     * @param g1
+     * @param g2
+     * @return boolean value representing if the graphs are Isomorphic
+     */
     public static boolean isomorphic(GraphEntity g1, GraphEntity g2){
+        if(g1 == null || g2 == null)
+            return false;
         return isomorphic(g1.getGraph(), g2.getGraph());
     }
 

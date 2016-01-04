@@ -7,9 +7,12 @@ package GraphTheory.Graphs;
 
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.Graph;
+import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.RenderingsManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -502,6 +505,154 @@ public class GraphTest {
         int length = testSubject.order();
         int[] degSeq = testSubject.getDegreeSequence();
         assertEquals(length, degSeq.length);
+    }
+
+    /**
+     * Test of getEdgeList method, of class Graph.
+     * This method returns all potential edges for the graph.
+     */
+    @Test
+    public void testGetEdgeList() {
+        System.out.println("getEdgeList");
+        ArrayList<GraphEdge> list = testSubject.getEdgeList();
+        int order = testSubject.order();
+        int maxSize = (order * (order - 1)) / 2;
+        assertEquals(true, list != null);
+        assertEquals(maxSize, list.size());
+    }
+
+    /**
+     * Test of setRenderer method, of class Graph.
+     */
+    @Test
+    public void testSetRenderer() {
+        System.out.println("setRenderer");
+        RenderingsManager m = new RenderingsManager();
+        Graph.setRenderer(m);
+    }
+
+    /**
+     * Test of addVertex method, of class Graph.
+     */
+    @Test
+    public void testAddVertex_GraphVertex() {
+        System.out.println("addVertex");
+        int order = testSubject.order();
+        GraphVertex v = new GraphVertex(testSubject,0,0);
+        testSubject.addVertex(v);
+        assertEquals(order + 1, testSubject.order());
+        assertEquals(true, testSubject.elementOf(v));
+    }
+
+    /**
+     * Test of getContents method, of class Graph.
+     */
+    @Test
+    public void testGetContents() {
+        System.out.println("getContents");
+        assertEquals(false,testSubject.getContents()==null);
+    }
+
+    /**
+     * Test of getEdge method, of class Graph.
+     */
+    @Test
+    public void testGetEdge_GraphVertex_GraphVertex() {
+        System.out.println("getEdge");
+        
+    }
+
+    /**
+     * Test of getEdge method, of class Graph.
+     */
+    @Test
+    public void testGetEdge_GraphEdge() {
+        System.out.println("getEdge");
+        ArrayList<GraphVertex> vSet = testSubject.getVertexSet();
+        GraphEdge e = new GraphEdge(testSubject, vSet.get(6), vSet.get(7));
+
+        assertEquals(false, testSubject.getEdge(e) == null);
+    }
+
+    /**
+     * Test of getAdjacencyMatrix method, of class Graph.
+     */
+    @Test
+    public void testGetAdjacencyMatrix() {
+        System.out.println("getAdjacencyMatrix");
+        int[][] adj = testSubject.getAdjacencyMatrix();
+        int order = testSubject.order();
+        assertEquals(order, adj.length);
+        assertEquals(order, adj[0].length);
+
+        GraphEdge e = testSubject.getEdgeSet().get(0);
+        int s = testSubject.getVertexSet().indexOf(e.getStartNode());
+        int f = testSubject.getVertexSet().indexOf(e.getEndNode());
+        int length = e.getLength();
+        assertEquals(length, adj[s][f]);
+        assertEquals(length, adj[f][s]);
+    }
+
+    /**
+     * Test of isomorphic method, of class Graph.
+     */
+    @Test
+    public void testIsomorphic_GraphEntity_GraphEntity() {
+        System.out.println("isomorphic");
+        assertEquals(false, Graph.isomorphic(null, (GraphEntity)null));
+    }
+
+    /**
+     * Test of isomorphic method, of class Graph.
+     */
+    @Test
+    public void testIsomorphic_Graph_Graph() {
+        System.out.println("isomorphic");
+        Graph k4 = Graph.buildKGraph(4);
+        assertEquals(false, Graph.isomorphic(k4, testSubject));
+
+        Graph triangles = new Graph(6);
+        ArrayList<GraphVertex> triVSet = triangles.getVertexSet();
+        Graph hexagon = new Graph(6);
+        ArrayList<GraphVertex> hexVSet = hexagon.getVertexSet();
+
+        triangles.drawEdge(triVSet.get(0), triVSet.get(1));
+        triangles.drawEdge(triVSet.get(1), triVSet.get(2));
+        triangles.drawEdge(triVSet.get(2), triVSet.get(0));
+
+        triangles.drawEdge(triVSet.get(3), triVSet.get(4));
+        triangles.drawEdge(triVSet.get(4), triVSet.get(5));
+        triangles.drawEdge(triVSet.get(5), triVSet.get(3));
+
+        hexagon.drawEdge(hexVSet.get(0), hexVSet.get(1));
+        hexagon.drawEdge(hexVSet.get(1), hexVSet.get(2));
+        hexagon.drawEdge(hexVSet.get(2), hexVSet.get(3));
+        hexagon.drawEdge(hexVSet.get(3), hexVSet.get(4));
+        hexagon.drawEdge(hexVSet.get(4), hexVSet.get(5));
+        hexagon.drawEdge(hexVSet.get(5), hexVSet.get(0));
+
+        assertEquals(false, Graph.isomorphic(triangles, hexagon));
+
+        assertEquals(true, Graph.isomorphic(k4, Graph.buildKGraph(4)));
+    }
+
+    /**
+     * Test of getCircle method, of class Graph.
+     */
+    @Test
+    public void testGetCircle() {
+        System.out.println("getCircle");
+        assertEquals(false, testSubject.getCircle() == null);
+    }
+
+    /**
+     * Test of updateContentParents method, of class Graph.
+     */
+    @Test
+    public void testUpdateContentParents() {
+        System.out.println("updateContentParents");
+        testSubject.updateContentParents();
+        assertEquals(testSubject, testSubject.getEdgeSet().get(0).getParent());
     }
     
 }
