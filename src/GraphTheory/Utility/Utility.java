@@ -5,17 +5,14 @@
  */
 package GraphTheory.Utility;
 
-import GraphTheory.Graphs.Graph;
 import GraphTheory.GuiConstants;
 import GraphTheory.IntegratedGraphing;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -67,9 +64,40 @@ public final class Utility {
     }
     
     public static void ensureAToggle(MouseEvent e){
+        if(e == null)
+            return;
         ToggleButton srcButton = (ToggleButton)e.getSource();
         if(srcButton.getToggleGroup().getSelectedToggle() == null)
             srcButton.setSelected(true);
     }
 
+    public static ToggleButton setupToggleButton(String imgName, EventHandler<MouseEvent> clickHandler,
+                                    String tooltipText){      
+        if(imgName == null || clickHandler == null || tooltipText == null)
+            return null;
+
+        ToggleButton button = new ToggleButton(null, loadView(loadImage(imgName)));
+        button.setOnMouseClicked(clickHandler);
+        
+        Tooltip tooltip = new Tooltip(tooltipText);
+        hackTooltipStartTiming(tooltip);
+        button.setTooltip(tooltip);
+        
+        return button;        
+    }
+
+    public static Button setupButton(String imgName, EventHandler<MouseEvent> clickHandler,
+                                     String tooltipText){
+        if(imgName == null || clickHandler == null || tooltipText == null)
+            return null;
+
+        Button button = new Button(null, loadView(loadImage(imgName)));
+        button.setOnMouseClicked(clickHandler);
+
+        Tooltip tooltip = new Tooltip(tooltipText);
+        hackTooltipStartTiming(tooltip);
+        button.setTooltip(tooltip);
+
+        return button;
+    }
 }

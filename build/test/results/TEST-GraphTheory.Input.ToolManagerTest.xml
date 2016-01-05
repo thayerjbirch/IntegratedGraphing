@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="Magellan" name="GraphTheory.Graphs.GraphVertexTest" skipped="0" tests="4" time="0.187" timestamp="2016-01-05T01:28:35">
+<testsuite errors="1" failures="0" hostname="Magellan" name="GraphTheory.Input.ToolManagerTest" skipped="0" tests="1" time="0.956" timestamp="2016-01-05T01:28:36">
   <properties>
     <property name="netbeans.autoupdate.country" value="US" />
     <property name="javafx.binarycss" value="false" />
@@ -46,7 +46,7 @@
     <property name="user.name" value="Thayer" />
     <property name="copylibs.rebase" value="true" />
     <property name="libs.swing-layout.maven-pom" value="" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner GraphTheory.Graphs.GraphVertexTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\Thayer\Documents\GitHub\IntegratedGraphing\build\test\results\TEST-GraphTheory.Graphs.GraphVertexTest.xml crashfile=C:\Users\Thayer\Documents\GitHub\IntegratedGraphing\build\junitvmwatcher5798982045442048472.properties propsfile=C:\Users\Thayer\Documents\GitHub\IntegratedGraphing\build\junit7179097460633876815.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner GraphTheory.Input.ToolManagerTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,C:\Users\Thayer\Documents\GitHub\IntegratedGraphing\build\test\results\TEST-GraphTheory.Input.ToolManagerTest.xml crashfile=C:\Users\Thayer\Documents\GitHub\IntegratedGraphing\build\junitvmwatcher6543830294738337322.properties propsfile=C:\Users\Thayer\Documents\GitHub\IntegratedGraphing\build\junit3584565219284635817.properties" />
     <property name="build.classes.dir" value="build/classes" />
     <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
     <property name="build.sysclasspath" value="ignore" />
@@ -339,10 +339,21 @@
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
     <property name="javafx.deploy.installpermanently" value="false" />
   </properties>
-  <testcase classname="GraphTheory.Graphs.GraphVertexTest" name="testGetAdjacentTo" time="0.005" />
-  <testcase classname="GraphTheory.Graphs.GraphVertexTest" name="testGetDegree" time="0.0" />
-  <testcase classname="GraphTheory.Graphs.GraphVertexTest" name="testGetX" time="0.001" />
-  <testcase classname="GraphTheory.Graphs.GraphVertexTest" name="testGetY" time="0.0" />
-  <system-out><![CDATA[]]></system-out>
+  <testcase classname="GraphTheory.Input.ToolManagerTest" name="testSetupToolManager" time="0.742">
+    <error type="java.lang.ExceptionInInitializerError">java.lang.ExceptionInInitializerError
+	at GraphTheory.Utility.Utility.setupButton(Utility.java:94)
+	at GraphTheory.Input.ToolManager.setupFileTools(ToolManager.java:59)
+	at GraphTheory.Input.ToolManager.setupToolManager(ToolManager.java:29)
+	at GraphTheory.Input.ToolManagerTest.testSetupToolManager(ToolManagerTest.java:47)
+Caused by: java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:273)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:268)
+	at com.sun.javafx.application.PlatformImpl.setPlatformUserAgentStylesheet(PlatformImpl.java:550)
+	at com.sun.javafx.application.PlatformImpl.setDefaultPlatformUserAgentStylesheet(PlatformImpl.java:512)
+	at javafx.scene.control.Control.&lt;clinit&gt;(Control.java:87)
+</error>
+  </testcase>
+  <system-out><![CDATA[setupToolManager
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

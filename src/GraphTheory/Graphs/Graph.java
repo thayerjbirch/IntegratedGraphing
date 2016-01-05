@@ -72,18 +72,35 @@ public class Graph implements GraphObject, Translatable {
         return edgeSet;
     }
 
+    /**
+     * The list of potential edges in the graph.
+     * @return
+     */
     public ArrayList<GraphEdge> getEdgeList() {
         return edges;
     }
 
+    /**
+     * Returns the default spacing of vertices.
+     * @return
+     */
     public double getDefaultRadius() {
         return defaultRadius;
     }
 
+    /**
+     * Evenly spaces the vertices about the center of the graph
+     * at a default distance.
+     */
     public void reorderVertexs() {
         reorderVertexs(defaultRadius);
     }
 
+    /**
+     * Evenly spaces the vertices in a circle about the center of the graph,
+     * placing each at the radius distance away.
+     * @param radius
+     */
     public void reorderVertexs(double radius) {
         defaultRadius = radius;
         double radians = 2 * Math.PI / vertexSet.size(); //2pi radians in a circle, divided into order number of arcs
@@ -92,10 +109,17 @@ public class Graph implements GraphObject, Translatable {
         }
     }
 
+    /**
+     * Default constructor.
+     */
     public Graph() {
         this(GuiConstants.RENDERINGS_WIDTH / 2, GuiConstants.RENDERINGS_HEIGHT / 2);
     }
 
+    /**
+     * Constructor for a graph with the given number of vertices.
+     * @param order
+     */
     public Graph(int order){
         this(GuiConstants.RENDERINGS_WIDTH / 2, GuiConstants.RENDERINGS_HEIGHT / 2, order);
     }
@@ -136,6 +160,10 @@ public class Graph implements GraphObject, Translatable {
         }
     }
 
+    /**
+     * Sets the static rendering manager for the Graph class.
+     * @param m
+     */
     public static void setRenderer(RenderingsManager m){
         renderingsManager = m;
     }
@@ -158,6 +186,12 @@ public class Graph implements GraphObject, Translatable {
         return g;
     }
 
+    /**
+     * Builds a graph of a given order, and draws all
+     * potential edges.
+     * @param order
+     * @return
+     */
     public static Graph buildKGraph(int order) {
         return buildKGraph(GuiConstants.RENDERINGS_WIDTH / 2,
                 GuiConstants.RENDERINGS_HEIGHT / 2, order);
@@ -189,6 +223,10 @@ public class Graph implements GraphObject, Translatable {
         vertexSetChanged();
     }
 
+    /**
+     * Adds a vertex to the graph.
+     * @param u
+     */
     public void addVertex(GraphVertex u){
         newVertexSetup(u);
     }
@@ -237,6 +275,12 @@ public class Graph implements GraphObject, Translatable {
         return addEdge(start, end, Color.BLACK);
     }
 
+    /**
+     * Draws the edge if it is a potential edge from the graph.
+     * @param start
+     * @param end
+     * @return A graph edge if one is drawn, null otherwise
+     */
     public GraphEdge drawEdge(GraphVertex start, GraphVertex end) {
         GraphEdge e = findEdge(start, end);
         if(e == null){
@@ -249,6 +293,11 @@ public class Graph implements GraphObject, Translatable {
         }
     }
 
+    /**
+     * Takes a potential edge of the graph and adds it to the edge set
+     * also adding it to the rendering manager.
+     * @param e
+     */
     public void drawEdge(GraphEdge e) {
         e.active = true;
         edgeSet.add(e);
@@ -262,6 +311,12 @@ public class Graph implements GraphObject, Translatable {
         renderingsManager.addNode(e.line);
     }
 
+    /**
+     * Deletes the edge from the edge set and the list
+     * of all potential edges of the graph.
+     * @param e
+     * @return True if the edge is deleted.
+     */
     public boolean deleteEdge(GraphEdge e) {
         Logger.log("Deleting edge.");
         removeEdge(e);
@@ -269,6 +324,11 @@ public class Graph implements GraphObject, Translatable {
         return true;
     }
 
+    /**
+     * Removes the edge if it is a member of the edge set.
+     * @param e
+     * @return true if the edge is removed.
+     */
     public boolean removeEdge(GraphEdge e) {
         if (elementOf(e)) {
             e.active = false;
@@ -301,10 +361,22 @@ public class Graph implements GraphObject, Translatable {
         return edgeSet.size();
     }
 
+    /**
+     * Returns the maximum number of edges that can exist on
+     * a graph of this order.
+     * @param order
+     * @return
+     */
     public static int maxEdges(int order) {
         return (order * (order - 1) / 2); // (p * (p-1)) / 2 is the sum of all ints [1..order]
     }                                     // standard formula for max q of a (p,q) graph
 
+    /**
+     * Returns the maximum number of edges that can exist on
+     * a graph of this order.
+     * @param g
+     * @return
+     */
     public static int maxEdges(Graph g) {
         return maxEdges(g.order());
     }
@@ -319,6 +391,10 @@ public class Graph implements GraphObject, Translatable {
         return new Point2D(centerX + (Math.cos(rad) * defaultRadius), centerY + (Math.sin(rad) * defaultRadius));
     }
 
+    /**
+     * Any edges are removed from the graph, and any potential
+     * edges that were not present are drawn.
+     */
     public void complement() {
         for (GraphEdge n : edges) {
             GraphEdge temp = findEdge(n);
@@ -330,6 +406,11 @@ public class Graph implements GraphObject, Translatable {
         }
     }
 
+    /**
+     * Returns whether the vertex is in the vertex set.
+     * @param v
+     * @return
+     */
     public boolean elementOf(GraphVertex v) {
         for (GraphVertex u : vertexSet) {
             if (u == v || u.equals(v)){
@@ -339,6 +420,11 @@ public class Graph implements GraphObject, Translatable {
         return false;
     }
 
+    /**
+     * Returns whether the edge is in the edge set.
+     * @param e
+     * @return true if the edge is in the edge set
+     */
     public boolean elementOf(GraphEdge e) {
         for (GraphEdge u : edgeSet) {
             if (u == e) {
@@ -348,6 +434,10 @@ public class Graph implements GraphObject, Translatable {
         return false;
     }
 
+    /**
+     * Returns all the nodes that represent the graph.
+     * @return
+     */
     public ArrayList<Node> getContents(){
         return graphContents;
     }
@@ -357,17 +447,18 @@ public class Graph implements GraphObject, Translatable {
      * edge are vertices in the vertex set of this graph.
      * @param u
      * @param v
-     * @return
+     * @return GraphEdge
      */
     public GraphEdge getEdge(GraphVertex u, GraphVertex v){
         return getEdge(new GraphEdge(this,u,v));
     }
     
     /**
-     *
+     * Returns an edge if there is an edge in the graph's edge set
+     * that has endpoints at u and v.
      * @param u
      * @param v
-     * @return
+     * @return GraphEdge or null
      */
     public GraphEdge findEdge(GraphVertex u, GraphVertex v) {
         if(u == null || v == null)
@@ -392,6 +483,12 @@ public class Graph implements GraphObject, Translatable {
         return null;
     }
 
+    /**
+     * Returns the edge if it is in the edge set of the graph,
+     * otherwise returns null.
+     * @param e
+     * @return
+     */
     public GraphEdge findEdge(GraphEdge e) {
         for (GraphEdge n : edgeSet) {
             if (n.equals(e)) {

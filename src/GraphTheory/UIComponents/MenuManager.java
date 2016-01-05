@@ -9,6 +9,7 @@ import GraphTheory.Graphs.Graph;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
+import GraphTheory.Utility.Utility;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
