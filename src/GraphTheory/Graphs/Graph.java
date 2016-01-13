@@ -10,6 +10,7 @@ import GraphTheory.Input.MouseGestures;
 import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;
+import GraphTheory.Utility.StorageClasses.StorableGraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ public class Graph implements GraphObject, Translatable {
     private ArrayList<GraphEdge> edgeSet = new ArrayList();
     private ArrayList<GraphEdge> edges = new ArrayList();
     //private ArrayList<Graph> subgraphs = new ArrayList();
+    private boolean visible;
 
     public SimpleStringProperty orderProperty = new SimpleStringProperty("0");
     public SimpleStringProperty sizeProperty = new SimpleStringProperty("0");
@@ -116,6 +118,10 @@ public class Graph implements GraphObject, Translatable {
         this(GuiConstants.RENDERINGS_WIDTH / 2, GuiConstants.RENDERINGS_HEIGHT / 2);
     }
 
+    public Graph(boolean visible){
+        this(GuiConstants.RENDERINGS_WIDTH / 2, GuiConstants.RENDERINGS_HEIGHT / 2, visible);
+    }
+
     /**
      * Constructor for a graph with the given number of vertices.
      * @param order
@@ -131,6 +137,10 @@ public class Graph implements GraphObject, Translatable {
      * @param y
      */
     public Graph(double x, double y) {
+        this(x,y,true);
+    }
+
+    public Graph(double x, double y, boolean visible){
         centerX = x;
         centerY = y;
         circle = new GraphCircle(vertexSize / 2, this);
@@ -139,7 +149,9 @@ public class Graph implements GraphObject, Translatable {
         circle.setCenterX(x);
         circle.setCenterY(y);
         graphContents.add(circle);
-        renderingsManager.addNode(circle);
+        this.visible = visible;
+        if(visible)
+            renderingsManager.addNode(circle);
     }
 
     /**
@@ -208,7 +220,8 @@ public class Graph implements GraphObject, Translatable {
         GraphVertex tempVertex = new GraphVertex(this, x, y);
         MouseGestures.addGestures(tempVertex);
         graphContents.add(tempVertex.circle);
-        renderingsManager.addNode(tempVertex.circle);
+        if(visible)
+            renderingsManager.addNode(tempVertex.circle);
 
         newVertexSetup(tempVertex);
 
@@ -308,7 +321,8 @@ public class Graph implements GraphObject, Translatable {
         e.endNode.addAdjacent(e.startNode);
 
         graphContents.add(e.line);
-        renderingsManager.addNode(e.line);
+        if(visible)
+            renderingsManager.addNode(e.line);
     }
 
     /**
@@ -336,7 +350,8 @@ public class Graph implements GraphObject, Translatable {
             e.endNode.getAdjacentTo().remove(e.startNode);
             edgeSet.remove(e);
             graphContents.remove(e.line);
-            renderingsManager.removeNode(e.line);
+            if(visible)
+                renderingsManager.removeNode(e.line);
             edgeSetChanged();
             return true;
         }
@@ -350,6 +365,16 @@ public class Graph implements GraphObject, Translatable {
      */
     public int order() {
         return vertexSet.size();
+    }
+
+    public void setVisible(boolean newState){
+       visible = newState;
+       if(newState){
+           for(Node n : graphContents)
+               renderingsManager.addNode(n);
+       }else{
+           renderingsManager.removeAll(graphContents);
+       }
     }
 
     /**
@@ -534,6 +559,8 @@ public class Graph implements GraphObject, Translatable {
      * pane, this makes them easier to click on.
      */
     public void toFront() {
+        if(!visible)
+            return;
         for (GraphEdge e : edgeSet) {
             //e.line.toFront();Known issue that toFront() doesn't work
             renderingsManager.toFront(e.line);
@@ -549,6 +576,8 @@ public class Graph implements GraphObject, Translatable {
      * this is to make them easier to click on.
      */
     public void verticesToFront() {
+        if(!visible)
+            return;
         for (GraphVertex c : vertexSet) {
             renderingsManager.toFront(c.circle);
         }
@@ -692,7 +721,7 @@ public class Graph implements GraphObject, Translatable {
     private static boolean compareMatrixMutation(int[][] adj1, int[][] adj2, 
             Map<Integer,Integer> mapping){
         for(int i = 0; i < adj1.length; i++){
-            for(int j= 0; j < adj2.length; j++){
+            for(int j = 0; j < adj2.length; j++){
                 if(adj1[i][j]!=adj2[mapping.get(i)][mapping.get(j)])
                     return false;
             }

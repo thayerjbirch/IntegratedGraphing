@@ -5,14 +5,10 @@
  */
 package GraphTheory.Graphs;
 
-import GraphTheory.Graphs.GraphVertex;
-import GraphTheory.Graphs.Graph;
 import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.RenderingsManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import org.junit.After;
 import org.junit.AfterClass;

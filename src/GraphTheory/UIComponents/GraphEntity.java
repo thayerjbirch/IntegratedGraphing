@@ -11,6 +11,7 @@ import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Input.MouseGestures;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
+import GraphTheory.Utility.StorageClasses.StorableGraph;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -99,5 +100,9 @@ public class GraphEntity{
     
     public void toFront(){
         represents.toFront();
+    }
+
+    public GraphEntity getCopy(boolean visible){
+        return new StorableGraph(this).getGraphEntity(visible);
     }
 }

@@ -9,7 +9,6 @@ import GraphTheory.Graphs.Graph;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
-import GraphTheory.Utility.Utility;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -103,13 +102,19 @@ public class MenuManager {
             IntegratedGraphing.getHQ().checkIsomorphism();
         });
         
+        MenuItem selfIsomorphic = new MenuItem("Check for auto-isomorphism.");
+        selfIsomorphic.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
+        selfIsomorphic.setOnAction((ActionEvent t) -> {
+            IntegratedGraphing.getHQ().checkSelfIsomorphism();
+        });
+        
         MenuItem union = new MenuItem("Union Graphs");
         union.setAccelerator(KeyCombination.keyCombination("Ctrl+U"));
         union.setOnAction((ActionEvent t) -> {
             IntegratedGraphing.getHQ().unionGraphs();
         });
 
-        addTo.getItems().addAll(complement, isomorphic, union);
+        addTo.getItems().addAll(complement, isomorphic, selfIsomorphic, union);
     }
 
     private static void showNeedTwoGraphsAlert(){

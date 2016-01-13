@@ -22,30 +22,36 @@ public class StorableGraph implements Serializable{
     ArrayList<Double> yValues;
     ArrayList<Integer> startNodeIndices;
     ArrayList<Integer> endNodeIndices;
-    String name;
+    String name = "G";
 
-    StorableGraph(GraphEntity g){
+    public StorableGraph(GraphEntity g){
+        this(g.getGraph());
+        name = g.getName();
+    }
+    
+    public StorableGraph(Graph g){
         xValues = new ArrayList<>();
         yValues = new ArrayList<>();
         startNodeIndices = new ArrayList<>();
         endNodeIndices = new ArrayList<>();
-
-        Graph graph = g.getGraph();
-        ArrayList<GraphVertex> vertices = graph.getVertexSet();
+        ArrayList<GraphVertex> vertices = g.getVertexSet();
         for(GraphVertex v : vertices){
             xValues.add(v.getX());
             yValues.add(v.getY());
         }
-        for(GraphEdge e : graph.getEdgeSet()){
+        for(GraphEdge e : g.getEdgeSet()){
             startNodeIndices.add(vertices.indexOf(e.getStartNode()));
             endNodeIndices.add(vertices.indexOf(e.getEndNode()));
         }
-        name = g.getName();
     }
 
-    GraphEntity getGraphEntity(){
+    public GraphEntity getGraphEntity(){
+        return getGraphEntity(true);
+    }
+
+    public GraphEntity getGraphEntity(boolean visible){
         Logger.log("Building graph from stored data.", 1);
-        Graph g = new Graph();
+        Graph g = new Graph(visible);
         for(int i = 0; i < xValues.size(); i++){
             g.addVertex(xValues.get(i), yValues.get(i));
         }

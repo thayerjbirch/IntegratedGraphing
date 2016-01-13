@@ -17,7 +17,6 @@ import GraphTheory.UIComponents.MultiSelectionDialog;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
 import java.io.File;
-import java.util.Iterator;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -223,6 +222,38 @@ public class Headquarters {
             alert.show();
         });
         Logger.log("Isomorphism checker finished.");
+    }
+
+    public void checkSelfIsomorphism(){
+        ChoiceDialog<String> selectionDialog = new ChoiceDialog<>(
+             graphManager.curGraphEntity.getName(), graphManager.getGraphNames());
+        selectionDialog.setTitle("Complement");
+        selectionDialog.setHeaderText("Select which graph to complement:");
+
+        Optional<String> diaResult = selectionDialog.showAndWait();
+        diaResult.ifPresent((String target) -> {
+            GraphEntity g1 = graphManager.get(target);
+            GraphEntity g2 = g1.getCopy(false);
+            String result;
+
+            g2.getGraph().complement();
+         
+            boolean isIso = Graph.isomorphic(g1, g2);
+            Alert alert = new Alert(AlertType.INFORMATION);
+
+            if(isIso){
+                result = g1.getName() + " is isomorphic to " + g2.getName();
+                alert.setHeaderText("Sucess");
+            }
+            else{
+                result = g1.getName() + " is not isomorphic to " + g2.getName();
+                alert.setHeaderText("Failure");
+            }
+            Logger.log(result,1);
+            alert.setTitle("Isomorphism Results");
+            alert.setContentText(result);
+            alert.show();
+        });
     }
 
     public GraphEntity getCurrentGraph(){

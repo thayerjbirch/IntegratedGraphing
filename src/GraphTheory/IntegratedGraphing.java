@@ -6,7 +6,6 @@
 package GraphTheory;
 
 import GraphTheory.Graphs.Graph;
-import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MenuManager;
@@ -17,8 +16,6 @@ import GraphTheory.Utility.Headquarters;
 import GraphTheory.Utility.Logger;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
