@@ -5,9 +5,12 @@
  */
 package GraphTheory.Graphs;
 
+import GraphTheory.GuiConstants;
 import java.util.ArrayList;
 import java.util.BitSet;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 /**
@@ -19,6 +22,8 @@ public class GraphVertex implements GraphObject,Translatable{
     private Graph parent;
     private ArrayList<GraphVertex> adjacentTo;
     private ArrayList<GraphEdge> edges;
+    private SimpleStringProperty name;
+    private Label nameLabel;
 
     public ArrayList<GraphEdge> getEdges() {
         return edges;
@@ -85,8 +90,8 @@ public class GraphVertex implements GraphObject,Translatable{
             e.vertexMoved(this);
         }
     }
-    
-    public GraphVertex(Graph g, double x, double y, Color color){
+
+    public GraphVertex(Graph g, double x, double y, Color color, String name){
         parent = g;
         circle = new GraphCircle(g.vertexSize,this);
         circle.setCenterX(x);
@@ -95,6 +100,15 @@ public class GraphVertex implements GraphObject,Translatable{
         circle.setStroke(color);
         adjacentTo = new ArrayList();
         edges = new ArrayList();
+
+        this.name = new SimpleStringProperty(name);
+        nameLabel = new Label();
+        nameLabel.textProperty().bind(this.name);
+        repositionLabel();
+    }
+    
+    public GraphVertex(Graph g, double x, double y, Color color){
+        this(g,x,y,color,Integer.toString(g.order()));
     }
     
     public GraphVertex(Graph g, double x, double y){
@@ -116,5 +130,17 @@ public class GraphVertex implements GraphObject,Translatable{
         for(GraphEdge e : edges)
             e.vertexMoved(this);
         parent.recenterCircle();
+    }
+
+    public final void repositionLabel(){
+        double parentX = parent.circle.getCenterX();
+        double parentY = parent.circle.getCenterY();
+        double localX = getX();
+        double localY = getY();
+
+        double angle = Math.atan2(localY - parentY, localX - parentX);
+        double xPos = Math.cos(angle) * GuiConstants.LABEL_RADIUS + parentX;
+        double yPos = Math.sin(angle) * GuiConstants.LABEL_RADIUS + parentY;
+        nameLabel.relocate(xPos, yPos);
     }
 }

@@ -249,6 +249,7 @@ public class Headquarters {
                 result = g1.getName() + " is not isomorphic to " + g2.getName();
                 alert.setHeaderText("Failure");
             }
+
             Logger.log(result,1);
             alert.setTitle("Isomorphism Results");
             alert.setContentText(result);

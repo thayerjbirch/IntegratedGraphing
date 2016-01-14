@@ -64,6 +64,8 @@ public class StorableGraph implements Serializable{
         }
         Logger.log("Added " + Integer.toString(g.size()) + " edges.", 2);
 
+        g.recenterCircle();
+
         return new GraphEntity(name,g);
     }
 
