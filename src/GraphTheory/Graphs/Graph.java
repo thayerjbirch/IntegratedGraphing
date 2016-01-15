@@ -55,9 +55,9 @@ public class Graph implements GraphObject, Translatable {
     protected double defaultRadius = 100;
     public GraphCircle circle;
     public ArrayList<Node> graphContents = new ArrayList<>();
-    private ArrayList<GraphVertex> vertexSet = new ArrayList();
-    private ArrayList<GraphEdge> edgeSet = new ArrayList();
-    private ArrayList<GraphEdge> edges = new ArrayList();
+    private ArrayList<GraphVertex> vertexSet;
+    private ArrayList<GraphEdge> edgeSet;
+    private ArrayList<GraphEdge> edges;
     //private ArrayList<Graph> subgraphs = new ArrayList();
     private boolean visible;
 
@@ -149,6 +149,11 @@ public class Graph implements GraphObject, Translatable {
         circle.setCenterX(x);
         circle.setCenterY(y);
         graphContents.add(circle);
+
+        vertexSet = new ArrayList();
+        edgeSet = new ArrayList();
+        edges = new ArrayList();
+        
         this.visible = visible;
         if(visible)
             renderingsManager.addNode(circle);

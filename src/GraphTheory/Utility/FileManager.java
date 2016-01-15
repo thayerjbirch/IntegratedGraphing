@@ -22,6 +22,7 @@ import java.util.ArrayList;
  */
 public class FileManager {
     String dir;
+    String optionsFileName = "optConfig";
 
     public FileManager(String fileDirectory){
         dir = fileDirectory;
@@ -92,5 +93,49 @@ public class FileManager {
         if(!f.exists()){
             f.mkdir();
         }
+    }
+
+    public OptionsManager loadOptions(){
+        OptionsManager optMgr;
+        File fileIn = new File(IntegratedGraphing.dataDirectory + File.separator + optionsFileName);
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileIn))){
+            optMgr = (OptionsManager) in.readObject();
+            return optMgr;
+        } catch (FileNotFoundException ex){
+            Logger.log("Aborting from options load, file does not exist.");
+            return null;
+        } catch (IOException ex){
+            Logger.log("Aborting from options load, unable to read file.");
+            return null;
+        } catch (ClassNotFoundException ex) {
+            Logger.log("Aborting from options load, class not found.");
+            return null;
+        }
+    }
+
+    public boolean saveOptions(OptionsManager optMgr){
+        if(optMgr == null){
+            Logger.log("Options are null, aborting.");
+            return false;
+        }
+
+        File destFile = new File(IntegratedGraphing.dataDirectory + File.separator + optionsFileName);
+        try {
+            if(!destFile.exists())
+                destFile.createNewFile();
+        } catch (IOException ex) {
+            Logger.log("Save aborted, unable to access file.");
+            return false;
+        }
+
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(destFile))){
+            out.writeObject(optMgr);
+            out.close();
+            Logger.log("Options saved to " + destFile.toString());
+            return true;
+        } catch (IOException ex) {
+            Logger.log(ex.toString());
+        }
+        return false;
     }
 }

@@ -127,6 +127,7 @@ public class GraphVertex implements GraphObject,Translatable{
     @Override
     public void translate(double x, double y) {
         circle.translate(x, y);
+        repositionLabel();
         for(GraphEdge e : edges)
             e.vertexMoved(this);
         parent.recenterCircle();
@@ -142,5 +143,9 @@ public class GraphVertex implements GraphObject,Translatable{
         double xPos = Math.cos(angle) * GuiConstants.LABEL_RADIUS + parentX;
         double yPos = Math.sin(angle) * GuiConstants.LABEL_RADIUS + parentY;
         nameLabel.relocate(xPos, yPos);
+    }
+
+    public Label getLabel(){
+        return nameLabel;
     }
 }

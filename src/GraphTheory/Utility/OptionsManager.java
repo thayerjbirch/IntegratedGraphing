@@ -5,10 +5,31 @@
  */
 package GraphTheory.Utility;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Thayer
  */
-public class OptionsManager {
-    
+public class OptionsManager implements Serializable{
+    private boolean showVertexLabels;
+    private final transient Headquarters hq; //transient excludes from serializing
+
+    public OptionsManager(Headquarters h){
+        setToDefaults();
+        hq = h;
+    }
+
+    public void setShowVertexLabels(boolean val){
+        showVertexLabels = val;
+        hq.saveOptions();
+    }
+
+    public boolean getShowVertexLabels(){
+        return showVertexLabels;
+    }
+
+    public final void setToDefaults(){
+        showVertexLabels = false;
+    }
 }

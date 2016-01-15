@@ -37,6 +37,7 @@ public class Headquarters {
     GraphManager graphManager;
     SidebarManager sidebarManager;
     FileManager fileManager;
+    OptionsManager optionsManager;
     
     public Headquarters(RenderingsManager r, GraphManager g, SidebarManager s,
                         FileManager f){
@@ -44,6 +45,11 @@ public class Headquarters {
         graphManager = g;
         sidebarManager = s;
         fileManager = f;
+        optionsManager = fileManager.loadOptions();
+
+        if(optionsManager == null){//first time running or file was deleted
+            optionsManager = new OptionsManager(this);
+        }
     }
 
     public void setCurrentGraph(GraphEntity e){
@@ -261,6 +267,10 @@ public class Headquarters {
         return graphManager.getCurrentGraph();
     }
 
+    public OptionsManager getOptionsManager(){
+        return optionsManager;
+    }
+
     public void unionGraphs(){
         Logger.log("Begining union routine.");
         if(graphManager.getGraphs().size() < 2){
@@ -342,5 +352,9 @@ public class Headquarters {
             if(bt == ButtonType.OK)
                 clear();
         });
+    }
+
+    public void saveOptions(){
+        fileManager.saveOptions(optionsManager);
     }
 }

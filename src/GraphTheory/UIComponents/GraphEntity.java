@@ -12,6 +12,8 @@ import GraphTheory.Input.MouseGestures;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
 import GraphTheory.Utility.StorageClasses.StorableGraph;
+import java.util.ArrayList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -104,5 +106,12 @@ public class GraphEntity{
 
     public GraphEntity getCopy(boolean visible){
         return new StorableGraph(this).getGraphEntity(visible);
+    }
+
+    public ArrayList<Label> getTags(){
+        ArrayList<Label> ret = new ArrayList<>();
+        for(GraphVertex v : represents.getVertexSet())
+            ret.add(v.getLabel());
+        return ret;
     }
 }
