@@ -18,6 +18,7 @@ import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
 import java.io.File;
 import java.util.Optional;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -356,5 +357,26 @@ public class Headquarters {
 
     public void saveOptions(){
         fileManager.saveOptions(optionsManager);
+    }
+
+    public OptionsManager getOptions(){
+        return optionsManager;
+    }
+
+    public void setShowTags(boolean b){//later will give options pane a ref to optionsmanager
+        optionsManager.setShowVertexLabels(b);
+
+        if(b){
+            for(GraphEntity e : graphManager.getGraphs())
+                for(Node n : e.getTags()){
+                    renderingsManager.addNode(n);
+                }
+        }
+        else{
+            for(GraphEntity e : graphManager.getGraphs())
+                for(Node n : e.getTags()){
+                    renderingsManager.removeNode(n);
+                }
+        }
     }
 }

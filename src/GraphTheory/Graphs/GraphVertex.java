@@ -140,8 +140,10 @@ public class GraphVertex implements GraphObject,Translatable{
         double localY = getY();
 
         double angle = Math.atan2(localY - parentY, localX - parentX);
-        double xPos = Math.cos(angle) * GuiConstants.LABEL_RADIUS + parentX;
-        double yPos = Math.sin(angle) * GuiConstants.LABEL_RADIUS + parentY;
+        double xPos = Math.cos(angle) * GuiConstants.LABEL_RADIUS + localX
+                - (nameLabel.getWidth() / 2);
+        double yPos = Math.sin(angle) * GuiConstants.LABEL_RADIUS + localY
+                - (nameLabel.getHeight() / 2);
         nameLabel.relocate(xPos, yPos);
     }
 

@@ -70,6 +70,10 @@ public class GraphEntity{
     public boolean removeVertex(GraphVertex v){
         if(represents.removeVertex(v)){
             Logger.log("Deleted vertex from graph " + name);
+
+            if(represents.getVertexSet().isEmpty())
+                IntegratedGraphing.getHQ().removeGraph(this);
+
             return true;
         }
         else{

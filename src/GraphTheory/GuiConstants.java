@@ -14,7 +14,7 @@ import javafx.geometry.Insets;
 public class GuiConstants {
     private GuiConstants(){};
 
-    public static final double LABEL_RADIUS = 20;
+    public static final double LABEL_RADIUS = 25;
     
     public static final double SCENE_HEIGHT = 600;
     public static final double SCENE_WIDTH = 1000;

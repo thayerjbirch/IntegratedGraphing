@@ -10,7 +10,6 @@ import GraphTheory.Input.MouseGestures;
 import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.Utility.Logger;
-import GraphTheory.Utility.StorageClasses.StorableGraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import java.util.Map;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**

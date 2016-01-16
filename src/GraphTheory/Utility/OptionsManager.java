@@ -22,7 +22,7 @@ public class OptionsManager implements Serializable{
 
     public void setShowVertexLabels(boolean val){
         showVertexLabels = val;
-        hq.saveOptions();
+//        hq.saveOptions();
     }
 
     public boolean getShowVertexLabels(){
