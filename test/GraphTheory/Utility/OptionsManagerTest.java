@@ -17,12 +17,14 @@ import static org.junit.Assert.*;
  * @author Thayer
  */
 public class OptionsManagerTest {
+    private OptionsManager om;
     
     public OptionsManagerTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+//        om = new OptionsManager(new Headquarters());
     }
     
     @AfterClass
@@ -46,8 +48,6 @@ public class OptionsManagerTest {
         boolean val = false;
         OptionsManager instance = null;
         instance.setShowVertexLabels(val);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**

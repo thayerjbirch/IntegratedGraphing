@@ -34,11 +34,6 @@ public class IntegratedGraphing extends Application {
     private static Headquarters hq;
     BorderPane root;
     Canvas canvas;
-    private ToolManager toolManager;
-    private RenderingsManager renderingsManager;
-    private SidebarManager sidebarManager;
-    private GraphManager graphManager;
-    private FileManager fileManager;
     
     public static void main(String[] args) {
         launch(args);
@@ -68,16 +63,10 @@ public class IntegratedGraphing extends Application {
         root = new BorderPane();
         Scene mainScene = new Scene(root,GuiConstants.SCENE_WIDTH,GuiConstants.SCENE_HEIGHT);
         
-        graphManager = new GraphManager();
-        renderingsManager = new RenderingsManager();
-        Graph.setRenderer(renderingsManager);
-        sidebarManager = new SidebarManager();
-        fileManager = new FileManager(dataDirectory);
-
-        hq = new Headquarters(renderingsManager, graphManager, sidebarManager, fileManager);
+        hq = new Headquarters();
         
         Logger.log("Setting up the layout:");
-        createLayout(mainScene,root);
+        createLayout(mainScene, root, hq.getRenderingsMgr(), hq.getSidebarMgr());
         
         primaryStage.setScene(mainScene);
         primaryStage.show();
@@ -116,7 +105,8 @@ public class IntegratedGraphing extends Application {
 //        hq.saveToFile();
     }
     
-    private void createLayout(Scene s, BorderPane root){
+    private void createLayout(Scene s, BorderPane root, RenderingsManager renderingsManager,
+                    SidebarManager sidebarManager){
         Logger.log("Creating the main content pane.",1);
         root.setCenter(renderingsManager.getPane());
         

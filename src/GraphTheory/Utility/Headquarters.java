@@ -10,6 +10,7 @@ import GraphTheory.Graphs.GraphEdge;
 import GraphTheory.Graphs.GraphObject.GraphCircle;
 import GraphTheory.Graphs.GraphVertex;
 import GraphTheory.Graphs.Translatable;
+import GraphTheory.Input.ToolManager;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.UIComponents.GraphEntity;
 import GraphTheory.UIComponents.GraphManager;
@@ -39,13 +40,14 @@ public class Headquarters {
     SidebarManager sidebarManager;
     FileManager fileManager;
     OptionsManager optionsManager;
+    ToolManager toolManager;
     
-    public Headquarters(RenderingsManager r, GraphManager g, SidebarManager s,
-                        FileManager f){
-        renderingsManager = r;
-        graphManager = g;
-        sidebarManager = s;
-        fileManager = f;
+    public Headquarters(){
+        graphManager = new GraphManager();
+        renderingsManager = new RenderingsManager();
+        Graph.setRenderer(renderingsManager);
+        sidebarManager = new SidebarManager();
+        fileManager = new FileManager(IntegratedGraphing.dataDirectory);
         optionsManager = fileManager.loadOptions();
 
         if(optionsManager == null){//first time running or file was deleted
@@ -378,5 +380,13 @@ public class Headquarters {
                     renderingsManager.removeNode(n);
                 }
         }
+    }
+
+    public RenderingsManager getRenderingsMgr(){
+        return renderingsManager;
+    }
+
+    public SidebarManager getSidebarMgr(){
+        return sidebarManager;
     }
 }
