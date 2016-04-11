@@ -600,6 +600,7 @@ public class Graph implements GraphObject, Translatable {
                 n.getAdjacentTo().remove(v);
             }
             vertexSet.remove(v);
+            renderingsManager.removeNode(v.getLabel());
             renderingsManager.removeNode(v.circle);
             vertexSetChanged();
             return true;
