@@ -42,6 +42,9 @@ public class Headquarters {
     OptionsManager optionsManager;
     ToolManager toolManager;
     
+    /**
+     * Default constructor
+     */
     public Headquarters(){
         graphManager = new GraphManager();
         renderingsManager = new RenderingsManager();
@@ -55,6 +58,10 @@ public class Headquarters {
         }
     }
 
+    /**
+     * Sets the parameter to the current graph entity
+     * @param e
+     */
     public void setCurrentGraph(GraphEntity e){
         if(!e.equals(getCurrentGraph())){
             graphManager.setCurrentGraph(e);
@@ -62,16 +69,29 @@ public class Headquarters {
         }
     }
 
+    /**
+     * Sets the given index as the currently selected graph entity
+     * @param index
+     */
     public void setCurrentGraph(int index){
         setCurrentGraph(graphManager.get(index));
     }
     
+    /**
+     * Sets the current graph entity using the parameter as a
+     * key value 
+     * @param tag
+     */
     public void setCurrentGraph(String tag){
         GraphEntity e = graphManager.get(tag);
         if(e!=null)
             setCurrentGraph(e);
     }
     
+    /**
+     * Sets the current graph entity using the parameter graph
+     * @param g
+     */
     public void setCurrentGraph(Graph g){
         GraphEntity temp = null;
         for(GraphEntity e : graphManager.getGraphs())
@@ -86,19 +106,38 @@ public class Headquarters {
             Logger.log("Could not find an entity containing the specified graph.");
     }
 
+    /**
+     * Helper method, wraps the Graph passed in with a GraphEntity
+     * @param g
+     */
     public void addGraph(Graph g){
         addGraph(new GraphEntity(g));
     }
      
+    /**
+     * Helper method, wraps the Graph passed in with a GraphEntity and
+     * sets the name of the graph to the string passed in.
+     * @param name
+     * @param g
+     */
     public void addGraph(String name, Graph g){
         addGraph(new GraphEntity(name,g));        
     }
 
+    /**
+     * Adds the passed in GraphEntity to the GraphManager and sets
+     * the ui elements to reflect the new graph.
+     * @param e
+     */
     public void addGraph(GraphEntity e){
         graphManager.addGraph(e);
         sidebarManager.addGraph(e);
     }
 
+    /**
+     * Prompts a user for a number and then creates a new complete graph
+     * of the chosen size
+     */
     public void addKGraph(){
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("New Graph");
@@ -117,6 +156,11 @@ public class Headquarters {
         });
     }
 
+    /**
+     * Removes the given graph entity from the GraphManager and any of its
+     * associated nodes from the UI
+     * @param e
+     */
     public void removeGraph(GraphEntity e){
         Logger.log("Removing graph: " + e.getName());
         renderingsManager.removeNode(e.getGraph().getCircle());
@@ -125,6 +169,10 @@ public class Headquarters {
         graphManager.removeGraph(e);
     }
 
+    /**
+     * Attempts to draw a new edge between two vertices
+     * @param event
+     */
     public void edgeAddToolAction(MouseEvent event){
         GraphVertex srcVertex =  (GraphVertex) ((GraphCircle)event.getSource()).getRepresents();
         setCurrentGraph(srcVertex.getParent());
@@ -144,6 +192,12 @@ public class Headquarters {
         }
     }
 
+    /**
+     * This function sets the current graph to whatever is selected
+     * by the pointer.
+     * @param event
+     * @param t
+     */
     public void pointerPressed(MouseEvent event, Translatable t){
         renderingsManager.removeGlow();
         if(t instanceof Graph)
@@ -154,6 +208,12 @@ public class Headquarters {
             setCurrentGraph(((GraphEdge)t).getParent());
     }
 
+    /**
+     * Ensures the name of every graph is unique by appending
+     * numbers to duplicate names
+     * @param nameIn
+     * @return
+     */
     public String checkName(String nameIn){
         int i = 0;
         String name = nameIn;
@@ -168,18 +228,35 @@ public class Headquarters {
         return name;
     }
 
+    /**
+     * Routing method to remove an edge from the Graph Manager
+     * @param edge
+     */
     public void edgeDeleted(GraphEdge edge){
         graphManager.removeEdge(edge);
     }
 
+    /**
+     * Routing method to remove an vertex from the Graph Manager
+     * @param vertex
+     */
     public void vertexDeleted(GraphVertex vertex){
         graphManager.removeVertex(vertex);
     }
 
+    /**
+     * Routing method to add a vertex to the Graph manager at (x,y)
+     * @param x
+     * @param y
+     */
     public void vertexAdded(double x, double y){
         graphManager.addVertex(x,y);
     }
 
+    /**
+     * Removes all edges from the selected graph, and adds any graphs
+     * that were not previously in that graph.
+     */
     public void complementGraph(){
         ChoiceDialog<String> selectionDialog = new ChoiceDialog<>(
              graphManager.curGraphEntity.getName(), graphManager.getGraphNames());
@@ -194,6 +271,9 @@ public class Headquarters {
         });
     }
 
+    /**
+     * Determines if the two chosen graphs are isomorphic
+     */
     public void checkIsomorphism(){
         Logger.log("Begining isomorphism checking routine.");
         if(graphManager.getGraphs().size() < 2){
@@ -233,6 +313,9 @@ public class Headquarters {
         Logger.log("Isomorphism checker finished.");
     }
 
+    /**
+     * Determines if the selected graph has an auto isomorphism
+     */
     public void checkSelfIsomorphism(){
         ChoiceDialog<String> selectionDialog = new ChoiceDialog<>(
              graphManager.curGraphEntity.getName(), graphManager.getGraphNames());
@@ -266,14 +349,24 @@ public class Headquarters {
         });
     }
 
+    /**
+     * @return The currently selected graph
+     */
     public GraphEntity getCurrentGraph(){
         return graphManager.getCurrentGraph();
     }
 
+    /**
+     * @return the OptionsManager
+     */
     public OptionsManager getOptionsManager(){
         return optionsManager;
     }
 
+    /**
+     * Combines the selected graphs into one graph with the vertices
+     * and edges of both
+     */
     public void unionGraphs(){
         Logger.log("Begining union routine.");
         if(graphManager.getGraphs().size() < 2){
@@ -293,10 +386,16 @@ public class Headquarters {
         });
     }
 
+    /**
+     * Writes the current options and graph elements to a file
+     */
     public void saveToFile(){
         fileManager.saveToFile(graphManager.getGraphs());
     }
 
+    /**
+     * Writes the current options and graph elements to a new file
+     */
     public void saveAsToFile(){
         FileChooser fc = new FileChooser();
         fc.setTitle("Save file as:");
@@ -309,6 +408,9 @@ public class Headquarters {
         fileManager.saveToFile(newSave, graphManager.getGraphs());
     }
 
+    /**
+     * Removes all elements and creates a new workspace
+     */
     public void clear(){
         Logger.log("Clearing workspace contents.");
 //        Logger.log(Integer.toString(graphManager.getGraphs().size()));
@@ -327,6 +429,9 @@ public class Headquarters {
         Logger.log("Finished clearing workspace contents.");
     }
 
+    /**
+     * Loads the settings from a previous session
+     */
     public void loadFromFile(){
         Logger.log("Attempting to load from file.");
         FileChooser fc = new FileChooser();
@@ -343,6 +448,9 @@ public class Headquarters {
         }
     }
 
+    /**
+     * Shows confirmation dialog before clearing workspace
+     */
     public void newWorkspace(){
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("New Workspace");
@@ -357,15 +465,14 @@ public class Headquarters {
         });
     }
 
+    /**
+     * Writes options to a file
+     */
     public void saveOptions(){
         fileManager.saveOptions(optionsManager);
     }
 
-    public OptionsManager getOptions(){
-        return optionsManager;
-    }
-
-    public void setShowTags(boolean b){//later will give options pane a ref to optionsmanager
+    public void setShowVertexLabels(boolean b){
         optionsManager.setShowVertexLabels(b);
 
         if(b){

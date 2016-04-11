@@ -9,10 +9,12 @@ import GraphTheory.Graphs.Graph;
 import GraphTheory.Input.ToolManager;
 import GraphTheory.IntegratedGraphing;
 import GraphTheory.Utility.Logger;
+import GraphTheory.Utility.OptionsManager;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -35,13 +37,15 @@ public class MenuManager {
         MenuBar mainMenu = new MenuBar();
         Menu menuFile = new Menu("File");
         Menu menuGraphs = new Menu("Graphs");
+        Menu menuView = new Menu("View");
         Menu menuOptions = new Menu("Options");
 
-        mainMenu.getMenus().addAll(menuFile,menuGraphs,menuOptions);
+        mainMenu.getMenus().addAll(menuFile,menuGraphs,menuView,menuOptions);
         mainMenu.prefWidthProperty().bind(s.widthProperty());
         
         setupMenu(menuFile);
         setupGraphs(menuGraphs);
+        setupView(menuView);
 
         Logger.log("Setting up the toolbar.",2);
         toolbar = new ToolBar();
@@ -115,6 +119,17 @@ public class MenuManager {
         });
 
         addTo.getItems().addAll(complement, isomorphic, selfIsomorphic, union);
+    }
+
+    private static void setupView(Menu addTo){
+        CheckMenuItem vertexLabelToggle = new CheckMenuItem("View Vertex Labels");
+        vertexLabelToggle.setSelected(IntegratedGraphing.getHQ().getOptionsManager().getShowVertexLabels());
+        vertexLabelToggle.setAccelerator(KeyCombination.keyCombination("Ctrl+V"));
+        vertexLabelToggle.setOnAction((ActionEvent t) -> {
+            boolean shouldShow = vertexLabelToggle.isSelected();
+            IntegratedGraphing.getHQ().setShowVertexLabels(shouldShow);
+        });
+        addTo.getItems().addAll(vertexLabelToggle);
     }
 
     private static void showNeedTwoGraphsAlert(){
