@@ -477,15 +477,33 @@ public class Headquarters {
 
         if(b){
             for(GraphEntity e : graphManager.getGraphs())
-                for(Node n : e.getTags()){
+                for(Node n : e.getVertexLabels()){
                     renderingsManager.addNode(n);
                 }
         }
         else{
             for(GraphEntity e : graphManager.getGraphs())
-                for(Node n : e.getTags()){
+                for(Node n : e.getVertexLabels()){
                     renderingsManager.removeNode(n);
                 }
+        }
+    }
+
+    public void setShowEdgeLabels(boolean b){
+
+        if(b){
+            for(GraphEntity e : graphManager.getGraphs()){
+                for(Node n : e.getEdgeLabels()){
+                    renderingsManager.addNode(n);
+                }
+            }
+        }
+        else{
+            for(GraphEntity e : graphManager.getGraphs()){
+                for(Node n: e.getEdgeLabels()){
+                    renderingsManager.removeNode(n);
+                }
+            }
         }
     }
 

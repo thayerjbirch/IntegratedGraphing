@@ -68,13 +68,15 @@ public class Graph implements GraphObject, Translatable {
         return vertexSet;
     }
 
+    /**
+     * @return The list of all edges currently in the graph
+     */
     public ArrayList<GraphEdge> getEdgeSet() {
         return edgeSet;
     }
 
     /**
-     * The list of potential edges in the graph.
-     * @return
+     * @return The list of potential edges in the graph.
      */
     public ArrayList<GraphEdge> getEdgeList() {
         return edges;

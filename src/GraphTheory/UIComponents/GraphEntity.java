@@ -113,8 +113,21 @@ public class GraphEntity{
     }
 
     public ArrayList<Label> getTags(){
+        ArrayList<Label> ret = getVertexLabels();
+        ret.addAll(getEdgeLabels());
+        return ret;
+    }
+
+    public ArrayList<Label> getVertexLabels(){
         ArrayList<Label> ret = new ArrayList<>();
         for(GraphVertex v : represents.getVertexSet())
+            ret.add(v.getLabel());
+        return ret;
+    }
+
+    public ArrayList<Label> getEdgeLabels(){
+        ArrayList<Label> ret = new ArrayList<>();
+        for(GraphEdge v : represents.getEdgeSet())
             ret.add(v.getLabel());
         return ret;
     }

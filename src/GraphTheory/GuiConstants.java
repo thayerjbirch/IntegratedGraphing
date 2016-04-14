@@ -15,6 +15,8 @@ public class GuiConstants {
     private GuiConstants(){};
 
     public static final double LABEL_RADIUS = 25;
+    public static final double EDGE_LABEL_RADIUS = 25;
+    public static final double ANGLE_INCREMENT = Math.PI / 2;
     
     public static final double SCENE_HEIGHT = 600;
     public static final double SCENE_WIDTH = 1000;

@@ -129,7 +129,16 @@ public class MenuManager {
             boolean shouldShow = vertexLabelToggle.isSelected();
             IntegratedGraphing.getHQ().setShowVertexLabels(shouldShow);
         });
-        addTo.getItems().addAll(vertexLabelToggle);
+
+        CheckMenuItem edgeLabelToggle =  new CheckMenuItem("View Edge Labels");
+        edgeLabelToggle.setSelected(IntegratedGraphing.getHQ().getOptionsManager().getShowVertexLabels());
+        edgeLabelToggle.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
+        edgeLabelToggle.setOnAction((ActionEvent t) -> {
+            boolean shouldShow = edgeLabelToggle.isSelected();
+            IntegratedGraphing.getHQ().setShowEdgeLabels(shouldShow);
+        });
+
+        addTo.getItems().addAll(vertexLabelToggle, edgeLabelToggle);
     }
 
     private static void showNeedTwoGraphsAlert(){

@@ -5,7 +5,9 @@
  */
 package GraphTheory.Graphs;
 
+import GraphTheory.GuiConstants;
 import java.util.ArrayList;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -20,6 +22,7 @@ public class GraphEdge implements GraphObject,Translatable{
     private Graph parent;
     protected boolean active = false;
     private int length;
+    private Label lengthLabel;
     
     public GraphEdge(Graph p, GraphVertex start, GraphVertex end, Color color, int lengthIn){
         parent = p;
@@ -30,7 +33,10 @@ public class GraphEdge implements GraphObject,Translatable{
         line = new GraphLine(start.getX(),start.getY(),end.getX(),end.getY(),this);
         line.setStrokeWidth(p.strokeSize);
         line.setStroke(color);
+
         length = lengthIn;
+        lengthLabel = new Label(Integer.toString(length));
+        repositionLabel();
     }
     
     public GraphEdge(Graph p, GraphVertex start, GraphVertex end){
@@ -59,6 +65,7 @@ public class GraphEdge implements GraphObject,Translatable{
 
     public void setLength(int x){
         length = x;
+        setLabel(Integer.toString(x));
     }
 
     public int getLength(){
@@ -88,11 +95,13 @@ public class GraphEdge implements GraphObject,Translatable{
             line.setEndX(v.getX());
             line.setEndY(v.getY());
         }
+        repositionLabel();
     }
 
     @Override
     public void translate(double x, double y) {
         parent.translate(x, y);
+        repositionLabel();
     }
 
     public GraphVertex getStartNode(){
@@ -101,5 +110,38 @@ public class GraphEdge implements GraphObject,Translatable{
 
     public GraphVertex getEndNode(){
         return endNode;
+    }
+
+    public final void repositionLabel(){
+        double startX = line.getStartX();
+        double startY = line.getStartY();
+        double endX = line.getEndX();
+        double endY = line.getEndY();
+
+        double angle = Math.atan2(startX - endX, startY -endY) + GuiConstants.ANGLE_INCREMENT;
+
+//        double angle = Math.PI - Math.atan2(startX - endX, startY -endY);
+
+        double xPos = Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS 
+                + getCenterX() - (lengthLabel.widthProperty().doubleValue());
+        double yPos = Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS 
+                + getCenterY() - (lengthLabel.heightProperty().doubleValue());
+        lengthLabel.relocate(xPos, yPos);
+    }
+
+    public double getCenterX(){
+        return (line.getStartX() + line.getEndX())/2;
+    }
+
+    public double getCenterY(){
+        return (line.getStartY() + line.getEndY())/2;
+    }
+
+    public Label getLabel(){
+        return lengthLabel;
+    }
+
+    public void setLabel(String in){
+        lengthLabel.setText(in);
     }
 }

@@ -150,4 +150,8 @@ public class GraphVertex implements GraphObject,Translatable{
     public Label getLabel(){
         return nameLabel;
     }
+
+    public void setLabel(String in){
+        nameLabel.setText(in);
+    }
 }
