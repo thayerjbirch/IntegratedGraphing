@@ -41,8 +41,8 @@ public class IntegratedGraphing extends Application {
  
     @Override
     public void start(Stage primaryStage) throws IOException {
-        testSetup(primaryStage);
-//        setupRoutine(primaryStage);
+//        testSetup(primaryStage);
+        setupRoutine(primaryStage);
 //        fileManager.loadFromFile();
     }
     

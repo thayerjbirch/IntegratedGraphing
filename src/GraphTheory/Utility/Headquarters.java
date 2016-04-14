@@ -490,7 +490,6 @@ public class Headquarters {
     }
 
     public void setShowEdgeLabels(boolean b){
-
         if(b){
             for(GraphEntity e : graphManager.getGraphs()){
                 for(Node n : e.getEdgeLabels()){

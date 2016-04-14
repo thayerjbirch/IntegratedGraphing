@@ -74,7 +74,16 @@ public class RenderingsManager {
     }
     
     public void addNode(Node nodeIn){
-        renderings.getChildren().add(nodeIn);
+        try{
+            renderings.getChildren().add(nodeIn);
+        }catch(Exception ex){
+            Logger.log("Attempted to add an already present node.");
+        }
+    }
+
+    public void addAll(Collection<Node> nodes){
+        for(Node n : nodes)
+            addNode(n);
     }
 
     public void removeAll(Collection<Node> nodes){

@@ -6,7 +6,12 @@
 package GraphTheory.Graphs;
 
 import GraphTheory.GuiConstants;
+import GraphTheory.IntegratedGraphing;
+import GraphTheory.Utility.OptionsManager;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -122,10 +127,10 @@ public class GraphEdge implements GraphObject,Translatable{
 
 //        double angle = Math.PI - Math.atan2(startX - endX, startY -endY);
 
-        double xPos = Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS 
-                + getCenterX() - (lengthLabel.widthProperty().doubleValue());
-        double yPos = Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS 
-                + getCenterY() - (lengthLabel.heightProperty().doubleValue());
+        double xPos = Math.cos(angle) * (GuiConstants.EDGE_LABEL_RADIUS + lengthLabel.widthProperty().doubleValue() / 2)
+                + getCenterX();
+        double yPos = Math.sin(angle) * (GuiConstants.EDGE_LABEL_RADIUS + lengthLabel.heightProperty().doubleValue() / 2)
+                + getCenterY();
         lengthLabel.relocate(xPos, yPos);
     }
 
@@ -143,5 +148,16 @@ public class GraphEdge implements GraphObject,Translatable{
 
     public void setLabel(String in){
         lengthLabel.setText(in);
+    }
+
+    public List<Node> getVisualElements(){
+        OptionsManager optMan = IntegratedGraphing.getHQ().getOptionsManager();
+        List<Node> ret;
+        ret = new ArrayList<>();
+        ret.add(line);
+
+        if(optMan.getShowVertexLabels())
+            ret.add(lengthLabel);
+        return ret;
     }
 }
