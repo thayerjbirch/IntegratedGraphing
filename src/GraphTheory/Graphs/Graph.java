@@ -13,10 +13,13 @@ import GraphTheory.Utility.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 /**
@@ -56,6 +59,7 @@ public class Graph implements GraphObject, Translatable {
     private ArrayList<GraphVertex> vertexSet;
     private ArrayList<GraphEdge> edgeSet;
     private ArrayList<GraphEdge> edges;
+    private Queue<String> vertexLabelQueue;
     //private ArrayList<Graph> subgraphs = new ArrayList();
     private boolean visible;
 
@@ -153,6 +157,8 @@ public class Graph implements GraphObject, Translatable {
         vertexSet = new ArrayList();
         edgeSet = new ArrayList();
         edges = new ArrayList();
+
+        vertexLabelQueue = new LinkedList<>();//LinkedList is a basic queue implementation in Java
         
         this.visible = visible;
         if(visible)
@@ -602,8 +608,10 @@ public class Graph implements GraphObject, Translatable {
                 n.getAdjacentTo().remove(v);
             }
             vertexSet.remove(v);
-            renderingsManager.removeNode(v.getLabel());
+            Label vLabel = v.getLabel();
+            renderingsManager.removeNode(vLabel);
             renderingsManager.removeNode(v.circle);
+            vertexLabelQueue.add(vLabel.getText());
             vertexSetChanged();
             return true;
         }
@@ -746,5 +754,28 @@ public class Graph implements GraphObject, Translatable {
         for(GraphEdge e : edgeSet){
             e.setParent(this);
         }
+    }
+
+    public String getVertexName(){
+        if(vertexLabelQueue.isEmpty()){
+            int n = order();
+            int digit = n%26;
+            StringBuilder label = new StringBuilder(Character.toString((char)(digit+65)));//stringbuilder is overkill, but best practice
+            n = n / 26;
+            while(n>0){
+                digit = n%26;//26 for number of letters in english alphabet
+                label.insert(0, Character.toString((char)(digit+64)));//using 64 here instead of 65 like above because the rightmost column translates A->0,Z->25
+                n = n / 26;                                           //and every column to the left of that uses A->1,Z->26
+            }
+            return label.toString();
+        }
+        else{
+            return vertexLabelQueue.poll();
+        }
+    }
+
+    public void queueName(String s){
+        System.out.println("Queuing:" + s);
+        vertexLabelQueue.add(s);
     }
 }

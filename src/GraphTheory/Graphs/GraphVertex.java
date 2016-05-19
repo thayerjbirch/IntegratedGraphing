@@ -108,7 +108,7 @@ public class GraphVertex implements GraphObject,Translatable{
     }
     
     public GraphVertex(Graph g, double x, double y, Color color){
-        this(g,x,y,color, getDefaultLabel(g));
+        this(g,x,y,color, g.getVertexName());
     }
     
     public GraphVertex(Graph g, double x, double y){
@@ -122,20 +122,6 @@ public class GraphVertex implements GraphObject,Translatable{
             if(adjacentTo.contains(vertices.get(i)))
                 adj.set(i);
         return adj;
-    }
-
-    public static String getDefaultLabel(Graph g){//convert the number of vertex into a letter representation, similar to converting numbers from base 10 to base 26
-        int n = g.order();
-        int digit = n%26;
-        StringBuilder label = new StringBuilder(Character.toString((char)(digit+65)));//stringbuilder is overkill, but best practice
-        n = n / 26;
-        System.out.println(Integer.toString(digit) + ", " + Integer.toString(n));
-        while(n>0){
-            digit = n%26;//26 for number of letters in english alphabet
-            label.insert(0, Character.toString((char)(digit+64)));//using 64 here instead of 65 like above because the rightmost column translates A->0,Z->25
-            n = n / 26;                                           //and every column to the left of that uses A->1,Z->26
-        }
-        return label.toString();
     }
 
     @Override
