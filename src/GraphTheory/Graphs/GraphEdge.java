@@ -6,7 +6,11 @@
 package GraphTheory.Graphs;
 
 import GraphTheory.GuiConstants;
+import GraphTheory.IntegratedGraphing;
+import GraphTheory.Utility.OptionsManager;
 import java.util.ArrayList;
+import java.util.List;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
@@ -139,6 +143,17 @@ public class GraphEdge implements GraphObject,Translatable{
 
     public Label getLabel(){
         return lengthLabel;
+    }
+
+    public List<Node> getVisibleElements(){
+        OptionsManager optMan = IntegratedGraphing.getHQ().getOptionsManager();
+        List<Node> ret;
+        ret = new ArrayList<>();
+        ret.add(line);
+
+        if(optMan.getShowVertexLabels())
+            ret.add(lengthLabel);
+        return ret;
     }
 
     public void setLabel(String in){

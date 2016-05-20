@@ -232,7 +232,7 @@ public class Graph implements GraphObject, Translatable {
         MouseGestures.addGestures(tempVertex);
         graphContents.add(tempVertex.circle);
         if(visible)
-            renderingsManager.addNode(tempVertex.circle);
+            renderingsManager.addAll(tempVertex.getVisibleElements());
 
         newVertexSetup(tempVertex);
 
@@ -333,7 +333,7 @@ public class Graph implements GraphObject, Translatable {
 
         graphContents.add(e.line);
         if(visible)
-            renderingsManager.addNode(e.line);
+            renderingsManager.addAll(e.getVisibleElements());
     }
 
     /**
