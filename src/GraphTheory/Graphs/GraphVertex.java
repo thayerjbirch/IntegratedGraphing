@@ -149,6 +149,7 @@ public class GraphVertex implements GraphObject,Translatable{
         double yPos = Math.sin(angle) * GuiConstants.LABEL_RADIUS + localY
                 - (nameLabel.getHeight() / 2);
         nameLabel.relocate(xPos, yPos);
+        IntegratedGraphing.getHQ().getRenderingsMgr().ensureValidPosition(nameLabel);
     }
 
     public Label getLabel(){

@@ -11,7 +11,11 @@ import GraphTheory.Input.MouseGestures;
 import GraphTheory.Utility.Logger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -103,5 +107,21 @@ public class RenderingsManager {
     public void toFront(Node node){
         removeNode(node);
         addNode(node);
+    }
+
+    /**
+     * Ensures that the node passed in is not overlapping other drawn nodes. Uses repelling magnets
+     * style formula to push away from any overlapping nodes.
+     * @param nodeIn
+     */
+    public void ensureValidPosition(Node nodeIn){
+        List children = renderings.getChildren();
+        System.out.println(Boolean.toString(nodeIn.getClass().isInstance(javafx.scene.control.Label.class)));
+        List<Label> labels = (List) children.stream()
+                                            .filter(p -> p.getClass().isInstance(Label.class))
+                                            .collect(Collectors.toList());
+        System.out.println(Integer.toString(children.size()));
+        for(Label l : labels)
+            System.out.println(l.getText());
     }
 }

@@ -362,7 +362,7 @@ public class Graph implements GraphObject, Translatable {
             edgeSet.remove(e);
             graphContents.remove(e.line);
             if(visible)
-                renderingsManager.removeNode(e.line);
+                renderingsManager.removeAll(e.getVisibleElements());
             edgeSetChanged();
             return true;
         }
