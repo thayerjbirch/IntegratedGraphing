@@ -101,8 +101,6 @@ public class IntegratedGraphing extends Application {
 //        hq.loadFromFile();
         hq.addGraph("K6", Graph.buildKGraph(6));
         hq.addGraph("K4", Graph.buildKGraph(4));
-        hq.setShowVertexLabels(true);
-        hq.setShowEdgeLabels(true);
 //        hq.saveToFile();
     }
     

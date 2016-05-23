@@ -121,8 +121,10 @@ public class GraphEdge implements GraphObject,Translatable{
         double startY = line.getStartY();
         double endX = line.getEndX();
         double endY = line.getEndY();
+        double centerX = (startX + endX)/2;
+        double centerY = (startY + endY)/2;
 
-        double angle = Math.atan2(startX - endX, startY -endY) + GuiConstants.ANGLE_INCREMENT;
+        double angle = Math.atan2(startX - endX, startY -endY) - GuiConstants.ANGLE_INCREMENT;
 
 //        double angle = Math.PI - Math.atan2(startX - endX, startY -endY);
 

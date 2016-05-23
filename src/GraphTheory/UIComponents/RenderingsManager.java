@@ -116,12 +116,8 @@ public class RenderingsManager {
      */
     public void ensureValidPosition(Node nodeIn){
         List children = renderings.getChildren();
-        System.out.println(Boolean.toString(nodeIn.getClass().isInstance(javafx.scene.control.Label.class)));
         List<Label> labels = (List) children.stream()
-                                            .filter(p -> p.getClass().isInstance(Label.class))
+                                            .filter(p -> p instanceof javafx.scene.control.Label)
                                             .collect(Collectors.toList());
-        System.out.println(Integer.toString(children.size()));
-        for(Label l : labels)
-            System.out.println(l.getText());
     }
 }
