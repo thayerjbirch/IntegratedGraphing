@@ -131,7 +131,7 @@ public class MenuManager {
         });
 
         CheckMenuItem edgeLabelToggle =  new CheckMenuItem("View Edge Labels");
-        edgeLabelToggle.setSelected(IntegratedGraphing.getHQ().getOptionsManager().getShowVertexLabels());
+        edgeLabelToggle.setSelected(IntegratedGraphing.getHQ().getOptionsManager().getShowEdgeLabels());
         edgeLabelToggle.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
         edgeLabelToggle.setOnAction((ActionEvent t) -> {
             boolean shouldShow = edgeLabelToggle.isSelected();

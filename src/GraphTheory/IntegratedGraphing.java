@@ -17,10 +17,12 @@ import GraphTheory.Utility.Logger;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -67,7 +69,14 @@ public class IntegratedGraphing extends Application {
         
         Logger.log("Setting up the layout:");
         createLayout(mainScene, root, hq.getRenderingsMgr(), hq.getSidebarMgr());
-        
+
+        primaryStage.setOnCloseRequest((WindowEvent we) -> {
+            Logger.log("Exit request recieved, autosaving...");
+            System.out.println(Boolean.toString(hq.getOptionsManager().getShowEdgeLabels()));
+            hq.saveOptions();
+            hq.saveToFile();
+            Logger.log("Success, application will now exit.");
+        });        
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
@@ -101,7 +110,6 @@ public class IntegratedGraphing extends Application {
 //        hq.loadFromFile();
         hq.addGraph("K6", Graph.buildKGraph(6));
         hq.addGraph("K4", Graph.buildKGraph(4));
-//        hq.saveToFile();
     }
     
     private void createLayout(Scene s, BorderPane root, RenderingsManager renderingsManager,

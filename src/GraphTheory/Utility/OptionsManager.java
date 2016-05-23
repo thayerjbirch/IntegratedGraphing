@@ -13,6 +13,15 @@ import java.io.Serializable;
  */
 public class OptionsManager implements Serializable{
     private boolean showVertexLabels;
+    private boolean showEdgeLabels;
+
+    public boolean getShowEdgeLabels() {
+        return showEdgeLabels;
+    }
+
+    public void setShowEdgeLabels(boolean showEdgeLabels) {
+        this.showEdgeLabels = showEdgeLabels;
+    }
     private final transient Headquarters hq; //transient excludes from serializing
 
     public OptionsManager(Headquarters h){
@@ -30,5 +39,6 @@ public class OptionsManager implements Serializable{
 
     public final void setToDefaults(){
         showVertexLabels = false;
+        showEdgeLabels = false;
     }
 }

@@ -153,7 +153,7 @@ public class GraphEdge implements GraphObject,Translatable{
         ret = new ArrayList<>();
         ret.add(line);
 
-        if(optMan.getShowVertexLabels())
+        if(optMan.getShowEdgeLabels())
             ret.add(lengthLabel);
         return ret;
     }
