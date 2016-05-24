@@ -76,6 +76,12 @@ public class MenuManager {
                     IntegratedGraphing.getHQ().addKGraph();
                  });
 
+        MenuItem menuOpenButton = new MenuItem("Open");
+                 menuOpenButton.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
+                 menuOpenButton.setOnAction((ActionEvent t) -> {
+                     IntegratedGraphing.getHQ().loadFromFile();
+                 });
+
         MenuItem menuSaveButton = new MenuItem("Save");
                  menuSaveButton.setAccelerator(KeyCombination.keyCombination("Ctrl+s"));
                  menuSaveButton.setOnAction((ActionEvent t) -> {
@@ -89,8 +95,8 @@ public class MenuManager {
         });
 
         menuNewGraph.getItems().addAll(menuNewGraphEmpty,menuNewGraphK);
-        addTo.getItems().addAll(menuNewWorkspace, menuNewGraph, menuSaveButton,
-                                menuExitButton);
+        addTo.getItems().addAll(menuNewWorkspace, menuNewGraph, menuOpenButton, 
+                                menuSaveButton, menuExitButton);
     }
 
     private static void setupGraphs(Menu addTo){

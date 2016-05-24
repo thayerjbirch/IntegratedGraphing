@@ -34,6 +34,7 @@ public class IntegratedGraphing extends Application {
     public static String dataDirectory = null;
     private static Stage primaryStage;
     private static Headquarters hq;
+
     BorderPane root;
     Canvas canvas;
     
@@ -72,7 +73,6 @@ public class IntegratedGraphing extends Application {
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> {
             Logger.log("Exit request recieved, autosaving...");
-            System.out.println(Boolean.toString(hq.getOptionsManager().getShowEdgeLabels()));
             hq.saveOptions();
             hq.saveToFile();
             Logger.log("Success, application will now exit.");

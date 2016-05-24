@@ -41,6 +41,7 @@ public class Headquarters {
     FileManager fileManager;
     OptionsManager optionsManager;
     ToolManager toolManager;
+    FileChooser fc;
     
     /**
      * Default constructor
@@ -56,6 +57,12 @@ public class Headquarters {
         if(optionsManager == null){//first time running or file was deleted
             optionsManager = new OptionsManager(this);
         }
+
+        fc = new FileChooser();
+        fc.setInitialDirectory(new File(IntegratedGraphing.dataDirectory));
+        fc.getExtensionFilters().addAll(
+            new ExtensionFilter("Graph Workspace Files", "*.grph"),
+            new ExtensionFilter("All Files", "*.*"));
     }
 
     /**
@@ -397,12 +404,7 @@ public class Headquarters {
      * Writes the current options and graph elements to a new file
      */
     public void saveAsToFile(){
-        FileChooser fc = new FileChooser();
         fc.setTitle("Save file as:");
-        fc.setInitialDirectory(new File(IntegratedGraphing.dataDirectory));
-        fc.getExtensionFilters().addAll(
-            new ExtensionFilter("Graph Workspace Files", "*.grph"),
-            new ExtensionFilter("All Files", "*.*"));
         File newSave = fc.showSaveDialog(IntegratedGraphing.getPrimaryStage());
 
         fileManager.saveToFile(newSave, graphManager.getGraphs());
@@ -514,5 +516,24 @@ public class Headquarters {
 
     public SidebarManager getSidebarMgr(){
         return sidebarManager;
+    }
+
+    public void openWorkspace(){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Load Workspace");
+        alert.setHeaderText("Load a saved workspace");
+        alert.setContentText("Are you sure you want to clear your work? Unsaved" + 
+                             " changes will be discarded.");
+        Optional<ButtonType> response = alert.showAndWait();
+
+        response.ifPresent((ButtonType bt) -> {
+            if(bt == ButtonType.OK){
+                clear();
+
+                fc.setTitle("Load File");
+                File openFile = fc.showOpenDialog(IntegratedGraphing.getPrimaryStage());
+//                loadFromFile(openFile);
+            }
+        });
     }
 }
