@@ -6,8 +6,6 @@
 package GraphTheory;
 
 import GraphTheory.Graphs.Graph;
-import GraphTheory.Input.ToolManager;
-import GraphTheory.UIComponents.GraphManager;
 import GraphTheory.UIComponents.MenuManager;
 import GraphTheory.UIComponents.RenderingsManager;
 import GraphTheory.UIComponents.SidebarManager;
@@ -17,7 +15,6 @@ import GraphTheory.Utility.Logger;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
@@ -44,9 +41,9 @@ public class IntegratedGraphing extends Application {
  
     @Override
     public void start(Stage primaryStage) throws IOException {
-        testSetup(primaryStage);
-//        setupRoutine(primaryStage);
-//        fileManager.loadFromFile();
+//        testSetup(primaryStage);
+        setupRoutine(primaryStage);
+        hq.tryAutoLoad();
     }
     
     private void setupRoutine(Stage primaryStage){
@@ -72,10 +69,7 @@ public class IntegratedGraphing extends Application {
         createLayout(mainScene, root, hq.getRenderingsMgr(), hq.getSidebarMgr());
 
         primaryStage.setOnCloseRequest((WindowEvent we) -> {
-            Logger.log("Exit request recieved, autosaving...");
-            hq.saveOptions();
-            hq.saveToFile();
-            Logger.log("Success, application will now exit.");
+            closeRoutine();
         });        
         primaryStage.setScene(mainScene);
         primaryStage.show();
@@ -132,5 +126,12 @@ public class IntegratedGraphing extends Application {
 
     public static Stage getPrimaryStage(){
         return primaryStage;
+    }
+
+    public static void closeRoutine(){
+        Logger.log("Exit request recieved, autosaving...");
+        hq.saveOptions();
+        hq.saveToFile();
+        Logger.log("Success, application will now exit.");
     }
 }

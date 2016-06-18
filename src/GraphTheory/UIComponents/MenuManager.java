@@ -91,6 +91,7 @@ public class MenuManager {
         MenuItem menuExitButton = new MenuItem("Exit");
         menuExitButton.setAccelerator(KeyCombination.keyCombination("Ctrl+X"));
         menuExitButton.setOnAction((ActionEvent t) -> {
+            IntegratedGraphing.closeRoutine();
             System.exit(0);
         });
 

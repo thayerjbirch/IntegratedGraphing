@@ -40,6 +40,9 @@ public class FileManager {
             } catch (IOException ex) {
                 Logger.log("Save aborted, unable to access file.");
                 return;
+            } catch (NullPointerException ex){
+                Logger.log("No file chosen, save aborted");
+                return;
             }
 
             try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(destFile))){

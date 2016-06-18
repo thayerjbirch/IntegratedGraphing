@@ -450,6 +450,10 @@ public class Headquarters {
         }
     }
 
+    public void tryAutoLoad(){
+        fileManager.loadFromFile();
+    }
+
     /**
      * Shows confirmation dialog before clearing workspace
      */
