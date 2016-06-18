@@ -121,18 +121,34 @@ public class GraphEdge implements GraphObject,Translatable{
         double startY = line.getStartY();
         double endX = line.getEndX();
         double endY = line.getEndY();
-        double centerX = (startX + endX)/2;
-        double centerY = (startY + endY)/2;
+        
+        double centerX = getCenterX();
+        double centerY = getCenterY();
 
-        double angle = Math.atan2(startX - endX, startY -endY) - GuiConstants.ANGLE_INCREMENT;
+        //The labels are positioned by the corner, and we will be calculating the center of
+        //position we want. We are compensating by subtracting half of the label dimensions
+        double anchorX = centerX - (lengthLabel.widthProperty().doubleValue() / 2);
+        double anchorY = centerY - (lengthLabel.heightProperty().doubleValue() / 2);
 
-//        double angle = Math.PI - Math.atan2(startX - endX, startY -endY);
+        double angle = Math.atan2(startX - endX, startY - endY) + GuiConstants.ANGLE_INCREMENT;
 
-        double xPos = Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS 
-                + getCenterX() - (lengthLabel.widthProperty().doubleValue());
-        double yPos = Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS 
-                + getCenterY() - (lengthLabel.heightProperty().doubleValue());
-        lengthLabel.relocate(xPos, yPos);
+        //Positions the label on the perpindicular bisector away from the graph's center
+        double xPos = anchorX + (Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS);
+        double xPos2 = anchorX - (Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS);
+
+        double yPos = anchorY + (Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS);
+        double yPos2 = anchorY - (Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS);
+
+        if(distFromGraphCenter(xPos,yPos) >= distFromGraphCenter(xPos2,yPos2))
+            lengthLabel.relocate(xPos, yPos);
+        else
+            lengthLabel.relocate(xPos2, yPos2);
+    }
+
+    private double distFromGraphCenter(double x, double y){
+        double graphX = parent.circle.getCenterX();
+        double graphY = parent.circle.getCenterY();
+        return Math.sqrt((x - graphX)*(x - graphX) + (y - graphY)*(y - graphY));
     }
 
     public double getCenterX(){

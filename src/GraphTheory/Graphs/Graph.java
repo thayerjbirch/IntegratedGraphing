@@ -550,6 +550,12 @@ public class Graph implements GraphObject, Translatable {
         }
         circle.setCenterX(newSumX / divisor);
         circle.setCenterY(newSumY / divisor);
+        /*
+        centerX = newSumX / divisor;
+        centerY = newSumY / divisor;
+        circle.setCenterX(centerX);
+        circle.setCenterY(centerY);
+        */
     }
 
     /**
