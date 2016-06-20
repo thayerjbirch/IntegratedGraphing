@@ -27,6 +27,7 @@ public class GraphEdge implements GraphObject,Translatable{
     protected boolean active = false;
     private int length;
     private Label lengthLabel;
+    double angle;
     
     public GraphEdge(Graph p, GraphVertex start, GraphVertex end, Color color, int lengthIn){
         parent = p;
@@ -40,6 +41,7 @@ public class GraphEdge implements GraphObject,Translatable{
 
         length = lengthIn;
         lengthLabel = new Label(Integer.toString(length));
+        angle = Math.atan2(startNode.getX() - endNode.getX(), startNode.getY() - endNode.getY());
         repositionLabel();
     }
     
@@ -99,6 +101,8 @@ public class GraphEdge implements GraphObject,Translatable{
             line.setEndX(v.getX());
             line.setEndY(v.getY());
         }
+        angle = Math.atan2(startNode.getX() - endNode.getX(), startNode.getY() - endNode.getY());
+        isHorizontal();
         repositionLabel();
     }
 
@@ -130,14 +134,14 @@ public class GraphEdge implements GraphObject,Translatable{
         double anchorX = centerX - (lengthLabel.widthProperty().doubleValue() / 2);
         double anchorY = centerY - (lengthLabel.heightProperty().doubleValue() / 2);
 
-        double angle = Math.atan2(startX - endX, startY - endY) + GuiConstants.ANGLE_INCREMENT;
+        double labelAngle = angle + GuiConstants.ANGLE_INCREMENT;
 
         //Positions the label on the perpindicular bisector away from the graph's center
-        double xPos = anchorX + (Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS);
-        double xPos2 = anchorX - (Math.sin(angle) * GuiConstants.EDGE_LABEL_RADIUS);
+        double xPos = anchorX + (Math.sin(labelAngle) * GuiConstants.EDGE_LABEL_RADIUS);
+        double xPos2 = anchorX - (Math.sin(labelAngle) * GuiConstants.EDGE_LABEL_RADIUS);
 
-        double yPos = anchorY + (Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS);
-        double yPos2 = anchorY - (Math.cos(angle) * GuiConstants.EDGE_LABEL_RADIUS);
+        double yPos = anchorY + (Math.cos(labelAngle) * GuiConstants.EDGE_LABEL_RADIUS);
+        double yPos2 = anchorY - (Math.cos(labelAngle) * GuiConstants.EDGE_LABEL_RADIUS);
 
         if(distFromGraphCenter(xPos,yPos) >= distFromGraphCenter(xPos2,yPos2))
             lengthLabel.relocate(xPos, yPos);
@@ -176,5 +180,19 @@ public class GraphEdge implements GraphObject,Translatable{
 
     public void setLabel(String in){
         lengthLabel.setText(in);
+    }
+
+    public void setHighlighted(boolean highlighted){
+        if(highlighted){
+            line.setStroke(Color.RED);
+        }
+        else{
+            line.setStroke(Color.BLACK);
+        }
+    }
+
+    public boolean isHorizontal(){
+        double abAngle = Math.abs(angle);
+        return abAngle > Math.PI/4 && abAngle < (3*Math.PI/4);
     }
 }

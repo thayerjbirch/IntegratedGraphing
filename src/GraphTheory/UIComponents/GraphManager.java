@@ -54,6 +54,16 @@ public class GraphManager {
     public void addGraph(GraphEntity e){
         graphsMap.put(e.name,e);
         graphsList.add(e);
+        Graph g = e.getGraph();
+        if(g.order()>0){
+            Thread worker = new Thread(()->{
+                for(GraphVertex v : g.getVertexSet())
+                    v.repositionLabel();
+                for(GraphEdge edge : g.getEdgeList())
+                    edge.repositionLabel();
+            });
+            worker.start();
+        }
     }
     
     public boolean addEdge(GraphVertex u, GraphVertex v){
