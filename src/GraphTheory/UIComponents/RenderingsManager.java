@@ -108,15 +108,4 @@ public class RenderingsManager {
         addNode(node);
     }
 
-    /**
-     * Ensures that the node passed in is not overlapping other drawn nodes. Uses repelling magnets
-     * style formula to push away from any overlapping nodes.
-     * @param nodeIn
-     */
-    public void ensureValidPosition(Node nodeIn){
-        List children = renderings.getChildren();
-        List<Label> labels = (List) children.stream()
-                                            .filter(p -> p instanceof javafx.scene.control.Label)
-                                            .collect(Collectors.toList());
-    }
 }

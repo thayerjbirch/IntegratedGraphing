@@ -42,7 +42,7 @@ public class GraphEdge implements GraphObject,Translatable{
         length = lengthIn;
         lengthLabel = new Label(Integer.toString(length));
         angle = Math.atan2(startNode.getX() - endNode.getX(), startNode.getY() - endNode.getY());
-        repositionLabel();
+        //repositionLabel();
     }
     
     public GraphEdge(Graph p, GraphVertex start, GraphVertex end){
@@ -102,7 +102,6 @@ public class GraphEdge implements GraphObject,Translatable{
             line.setEndY(v.getY());
         }
         angle = Math.atan2(startNode.getX() - endNode.getX(), startNode.getY() - endNode.getY());
-        isHorizontal();
         repositionLabel();
     }
 
@@ -193,6 +192,6 @@ public class GraphEdge implements GraphObject,Translatable{
 
     public boolean isHorizontal(){
         double abAngle = Math.abs(angle);
-        return abAngle > Math.PI/4 && abAngle < (3*Math.PI/4);
+        return abAngle > Math.PI/4 && abAngle < (3*Math.PI/4);//is between 45 and -45 degrees from horizontal
     }
 }

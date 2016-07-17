@@ -6,9 +6,12 @@
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/UIComponents/DetailsRow.java</file>
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/GraphEdge.java</file>
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/GuiConstants.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Utility/Headquarters.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Utility/FileManager.java</file>
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/Graph.java</file>
             <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/Graphs/GraphVertex.java</file>
-            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/UIComponents/RenderingsManager.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/UIComponents/GraphEntity.java</file>
+            <file>file:/C:/Users/Thayer/Documents/GitHub/IntegratedGraphing/src/GraphTheory/UIComponents/GraphManager.java</file>
         </group>
     </open-files>
 </project-private>
